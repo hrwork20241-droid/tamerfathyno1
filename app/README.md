@@ -1,0 +1,34 @@
+# NO1 app
+
+React + Vite + TypeScript build of the `NO1 App.dc.html` design in `../project`.
+It is a marketplace with a retail / wholesale switch.
+
+```sh
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # typecheck + production bundle in dist/
+```
+
+On desktop the app renders inside the phone frame, next to the "Jump to" showcase panel.
+Below 480px wide it fills the viewport like a native app.
+
+## Options
+
+You can set the starting language, currency and mode with URL parameters. These replace the design's component props:
+
+`/?lang=en&currency=EGP&mode=wholesale`
+
+- `lang`: `ar` (default, RTL), `en`, `fr`, `es`, `tr`, `ur` (RTL), `hi`, `zh`
+- `currency`: `KWD` (default), `EGP`, `SAR`, `AED`, `QAR`, `BHD`, `OMR`, `JOD`, `IQD`, `MAD`, `USD`, `EUR`, `GBP`, `TRY`, `INR`, `PKR`, `CNY`
+- `mode`: `retail` (default) or `wholesale`
+
+## Layout
+
+- `src/store.tsx`: app state, navigation stack, price, currency and tier logic, and the toast
+- `src/data/`: products, categories, languages, currencies and all UI strings
+- `src/ui.tsx`: design tokens and shared pieces (image placeholder, back header, mode switch)
+- `src/screens/`: one component per screen (15 in total)
+
+Prices are stored in KWD and converted at the indicative rates in `data/locale.ts`.
+Product images are striped placeholders, as in the design.
+French, Spanish, Turkish, Urdu, Hindi and Chinese cover only the core strings, as in the design. Missing strings fall back to English.
