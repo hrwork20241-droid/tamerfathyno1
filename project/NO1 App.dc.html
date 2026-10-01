@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#e9e6df;font-family:Archivo,'IBM Plex Sans Arabic',system-ui,sans-serif;color:#17150f}a{color:#e8452c}a:hover{color:#b83218}button{font-family:inherit;cursor:pointer}input{font-family:inherit}.nos::-webkit-scrollbar{display:none}.nos{scrollbar-width:none}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;gap:56px;padding:40px 24px;box-sizing:border-box;flex-wrap:wrap">
+  <div style="max-width:300px;display:flex;flex-direction:column;gap:16px">
+    <div style="font:900 72px/0.85 Archivo,'IBM Plex Sans Arabic';letter-spacing:-3px">NO1<span style="color:#e8452c">.</span></div>
+    <p style="margin:0;font:400 15px/1.5 Archivo,'IBM Plex Sans Arabic';color:#57524a;text-wrap:pretty">Clickable prototype of a marketplace app with a retail / wholesale switch. Tap anything.</p>
+    <div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.5 'JetBrains Mono',monospace;color:#6b665c">
+      <div>Assumptions</div>
+      <div>· B2C + B2B (MOQ tiers, quotes)</div>
+      <div>· 8 languages, Arabic (RTL) first</div><div>· 17 currencies incl. EGP</div>
+      <div>· KNET, card, Apple Pay, cash</div>
+      <div>· Images are placeholders</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;font:500 13px Archivo,'IBM Plex Sans Arabic'">
+      <div style="font:400 12px 'JetBrains Mono',monospace;color:#6b665c">Jump to</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ jumps }}" as="j" hint-placeholder-count="10">
+          <button onClick="{{ j.go }}" style="border:1px solid #cfc9be;background:#f5f3ef;border-radius:999px;padding:6px 11px;font:500 12px Archivo,'IBM Plex Sans Arabic';color:#17150f" style-hover="background:#17150f;color:#fff">{{ j.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:390px;height:844px;border-radius:56px;background:#17150f;padding:11px;box-sizing:content-box;box-shadow:0 30px 80px rgba(23,21,15,.25),0 0 0 1px #2c2a24 inset;flex:none">
+    <div dir="{{ dir }}" style="width:100%;height:100%;border-radius:46px;overflow:hidden;background:#f5f3ef;display:flex;flex-direction:column;position:relative">
+      <div style="height:48px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font:600 15px Archivo,'IBM Plex Sans Arabic';position:relative;z-index:5;background:#f5f3ef">
+        <span>9:41</span>
+        <div style="position:absolute;left:50%;top:10px;transform:translateX(-50%);width:120px;height:32px;border-radius:20px;background:#000"></div>
+        <span style="font:600 12px 'JetBrains Mono',monospace;white-space:nowrap">5G ▮▮▮</span>
+      </div>
+
+      <div ref="{{ scrollRef }}" class="nos" style="flex:1;overflow-y:auto;overflow-x:hidden;position:relative">
+
+        <sc-if value="{{ is.home }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <div dir="ltr" style="font:900 30px/1 Archivo,'IBM Plex Sans Arabic';letter-spacing:-1.5px">NO1<span style="color:#e8452c">.</span></div>
+                <div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c;white-space:nowrap">{{ tx.deliverTo }} <b style="color:#17150f">{{ tx.city }} ▾</b></div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center"><button onClick="{{ goLocale }}" style="height:40px;padding:0 12px;border-radius:999px;border:1px solid #e0dbd2;background:#fff;font:700 12px 'JetBrains Mono',monospace;white-space:nowrap">{{ localeChip }}</button><button onClick="{{ goNotifs }}" style="position:relative;width:40px;height:40px;border-radius:50%;border:1px solid #e0dbd2;background:#fff;font:600 15px Archivo,'IBM Plex Sans Arabic'">◔<span style="position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:9px;background:#e8452c;color:#fff;font:700 10px/18px Archivo,'IBM Plex Sans Arabic'">3</span></button></div>
+            </div>
+            <button onClick="{{ goSearch }}" style="height:48px;border-radius:14px;border:2px solid #17150f;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 6px 0 16px;font:500 14px Archivo,'IBM Plex Sans Arabic';color:#8a8478">
+              <span style="flex:1;min-width:0;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tx.searchPh }}</span>
+              <span style="height:36px;padding:0 16px;border-radius:10px;background:#17150f;color:#fff;font:700 13px/36px Archivo,'IBM Plex Sans Arabic'">{{ tx.search }}</span>
+            </button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;background:#e6e2da;border-radius:12px;padding:4px;gap:4px">
+              <sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+                <button onClick="{{ m.set }}" style="height:38px;border:none;border-radius:9px;background:{{ m.bg }};color:{{ m.fg }};font:700 13px Archivo,'IBM Plex Sans Arabic';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px">{{ m.label }}<span style="font:500 10px Archivo,'IBM Plex Sans Arabic';opacity:.7">{{ m.sub }}</span></button>
+              </sc-for>
+            </div>
+            <div class="nos" style="display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:0 16px">
+              <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="6">
+                <button onClick="{{ c.set }}" style="flex:none;height:34px;padding:0 14px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font:600 13px Archivo,'IBM Plex Sans Arabic'">{{ c.label }}</button>
+              </sc-for>
+            </div>
+            <button onClick="{{ goDeals }}" style="border:none;text-align:start;border-radius:20px;background:#17150f;color:#fff;padding:20px;display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <span style="align-self:flex-start;background:#ffd23f;color:#17150f;font:800 11px Archivo,'IBM Plex Sans Arabic';padding:4px 8px;border-radius:6px;letter-spacing:.5px;white-space:nowrap">{{ tx.megaSale }}</span>
+                <div style="font:900 30px/0.95 Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.upTo }}<br><span style="color:#ff6a4d">{{ tx.off70 }}</span></div>
+                <div style="display:flex;gap:4px;align-items:center;font:500 12px 'JetBrains Mono',monospace">
+                  <span style="opacity:.7;margin-inline-end:4px;white-space:nowrap">{{ tx.endsIn }}</span>
+                  <span dir="ltr" style="display:flex;gap:4px;align-items:center"><span style="background:#fff;color:#17150f;border-radius:5px;padding:3px 5px;font-weight:700;white-space:nowrap">{{ t.h }}</span>:<span style="background:#fff;color:#17150f;border-radius:5px;padding:3px 5px;font-weight:700;white-space:nowrap">{{ t.m }}</span>:<span style="background:#fff;color:#17150f;border-radius:5px;padding:3px 5px;font-weight:700;white-space:nowrap">{{ t.s }}</span>
+                </span></div>
+              </div>
+              <div style="height:120px;border-radius:14px;background:repeating-linear-gradient(135deg,#2c2a24 0 8px,#24221d 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">campaign art</div>
+            </button>
+            <sc-if value="{{ isWholesale }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ goRfq }}" style="border:2px dashed #17150f;background:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;text-align:start">
+                <div style="display:flex;flex-direction:column;gap:3px"><b style="font:800 15px Archivo,'IBM Plex Sans Arabic'">{{ tx.rfq }}</b><span style="font:400 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.rfqSub }}</span></div>
+                <span style="font:800 20px Archivo,'IBM Plex Sans Arabic'">{{ tx.fwd }}</span>
+              </button>
+            </sc-if>
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <div style="font:900 20px Archivo,'IBM Plex Sans Arabic';letter-spacing:-.5px">{{ tx.flashDeals }} <span style="color:#e8452c">ϟ</span></div>
+              <button onClick="{{ goDeals }}" style="border:none;background:none;font:600 13px Archivo,'IBM Plex Sans Arabic';color:#e8452c">{{ tx.seeAll }}</button>
+            </div>
+            <div class="nos" style="display:flex;gap:10px;overflow-x:auto;margin:-6px -16px 0;padding:0 16px">
+              <sc-for list="{{ flash }}" as="p" hint-placeholder-count="4">
+                <button onClick="{{ p.open }}" style="flex:none;width:120px;border:none;background:none;padding:0;text-align:start;display:flex;flex-direction:column;gap:6px">
+                  <div style="position:relative;width:120px;height:120px;border-radius:14px;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ p.img }}<span style="position:absolute;top:6px;inset-inline-start:6px;background:#e8452c;color:#fff;font:800 11px Archivo,'IBM Plex Sans Arabic';padding:3px 6px;border-radius:6px;white-space:nowrap">{{ p.offText }}</span></div>
+                  <div style="font:800 15px Archivo,'IBM Plex Sans Arabic';color:#e8452c">{{ p.priceText }}</div>
+                  <div style="height:5px;border-radius:3px;background:#e6e2da;overflow:hidden"><div style="height:100%;width:{{ p.soldPct }};background:#e8452c"></div></div>
+                  <div style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ p.soldText }}</div>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font:900 20px Archivo,'IBM Plex Sans Arabic';letter-spacing:-.5px;margin-top:4px">{{ forYouTitle }}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;margin-top:-6px">
+              <sc-for list="{{ homeGrid }}" as="p" hint-placeholder-count="6">
+                <div onClick="{{ p.open }}" style="background:#fff;border-radius:16px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column">
+                  <div style="position:relative;aspect-ratio:1;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ p.img }}
+                    <button onClick="{{ p.toggleWish }}" style="position:absolute;top:8px;inset-inline-end:8px;width:32px;height:32px;border-radius:50%;border:none;background:#fff;color:{{ p.wishColor }};font:600 16px Archivo,'IBM Plex Sans Arabic'">{{ p.wishGlyph }}</button>
+                  </div>
+                  <div style="padding:10px 10px 12px;display:flex;flex-direction:column;gap:4px">
+                    <div style="font:500 13px/1.3 Archivo,'IBM Plex Sans Arabic';display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px">{{ p.name }}</div>
+                    <div style="display:flex;align-items:baseline;gap:6px"><span style="font:800 16px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ p.priceText }}</span><span style="font:400 11px Archivo,'IBM Plex Sans Arabic';color:#8a8478;text-decoration:line-through;white-space:nowrap">{{ p.wasText }}</span></div>
+                    <div style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ p.metaText }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.cats }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;height:100%">
+            <div style="padding:6px 16px 12px;display:flex;align-items:center;gap:12px">
+              <div style="font:900 26px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px;flex:1">{{ tx.categories }}</div>
+              <button onClick="{{ goSearch }}" style="height:38px;padding:0 14px;border-radius:999px;border:1px solid #e0dbd2;background:#fff;font:600 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.search }}</button>
+            </div>
+            <div style="flex:1;display:grid;grid-template-columns:104px 1fr;min-height:0;border-top:1px solid #e6e2da">
+              <div style="background:#efece6;display:flex;flex-direction:column">
+                <sc-for list="{{ railCats }}" as="c" hint-placeholder-count="8">
+                  <button onClick="{{ c.set }}" style="border:none;border-inline-start:3px solid {{ c.border }};background:{{ c.bg }};height:52px;text-align:start;padding:0 12px;font:{{ c.weight }} 13px Archivo,'IBM Plex Sans Arabic';color:#17150f">{{ c.label }}</button>
+                </sc-for>
+              </div>
+              <div style="padding:14px;display:flex;flex-direction:column;gap:16px;background:#fff">
+                <div style="height:90px;border-radius:12px;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ railCat }} banner</div>
+                <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.shopByType }}</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px">
+                  <sc-for list="{{ subs }}" as="s" hint-placeholder-count="6">
+                    <button onClick="{{ s.go }}" style="border:none;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px">
+                      <div style="width:60px;height:60px;border-radius:50%;background:repeating-linear-gradient(135deg,#ece8e1 0 6px,#e4dfd6 6px 12px)"></div>
+                      <span style="font:500 11px/1.2 Archivo,'IBM Plex Sans Arabic';text-align:center;color:#17150f">{{ s.label }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.topSellers }}</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ catTop }}" as="p" hint-placeholder-count="3">
+                    <div onClick="{{ p.open }}" style="display:flex;gap:10px;cursor:pointer">
+                      <div style="width:64px;height:64px;flex:none;border-radius:10px;background:repeating-linear-gradient(135deg,#ece8e1 0 6px,#e4dfd6 6px 12px)"></div>
+                      <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font:500 12px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ p.name }}</span><b style="font:800 14px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ p.priceText }}</b></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.deals }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column">
+            <div style="background:#ffd23f;padding:10px 16px 18px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;justify-content:space-between;align-items:flex-end">
+                <div style="font:900 34px/0.9 Archivo,'IBM Plex Sans Arabic';letter-spacing:-1.5px">{{ tx.flash1 }}<br>{{ tx.flash2 }} ϟ</div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+                  <span style="font:600 11px Archivo,'IBM Plex Sans Arabic'">{{ tx.roundEnds }}</span>
+                  <span style="font:700 20px 'JetBrains Mono',monospace;background:#17150f;color:#ffd23f;padding:4px 8px;border-radius:8px" dir="ltr">{{ t.h }}:{{ t.m }}:{{ t.s }}</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+                <sc-for list="{{ slots }}" as="s" hint-placeholder-count="3">
+                  <button onClick="{{ s.set }}" style="height:44px;border-radius:10px;border:none;background:{{ s.bg }};color:{{ s.fg }};font:800 14px Archivo,'IBM Plex Sans Arabic';display:flex;flex-direction:column;align-items:center;justify-content:center">{{ s.time }}<span style="font:500 10px Archivo,'IBM Plex Sans Arabic'">{{ s.sub }}</span></button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="padding:14px 16px 24px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ dealList }}" as="p" hint-placeholder-count="5">
+                <div style="background:#fff;border-radius:16px;padding:10px;display:flex;gap:12px">
+                  <div onClick="{{ p.open }}" style="cursor:pointer;width:96px;height:96px;flex:none;border-radius:12px;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 9px 'JetBrains Mono',monospace;color:#8a8478">{{ p.img }}</div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+                    <div style="font:500 13px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ p.name }}</div>
+                    <div style="display:flex;align-items:baseline;gap:6px"><b style="font:800 17px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ p.priceText }}</b><span style="font:400 11px Archivo,'IBM Plex Sans Arabic';color:#8a8478;text-decoration:line-through;white-space:nowrap">{{ p.wasText }}</span><span style="font:800 11px Archivo,'IBM Plex Sans Arabic';color:#e8452c">{{ p.offText }}</span></div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:6px;border-radius:3px;background:#efece6;overflow:hidden"><div style="height:100%;width:{{ p.soldPct }};background:#e8452c"></div></div>
+                      <button onClick="{{ p.quickAdd }}" style="height:32px;padding:0 14px;border:none;border-radius:999px;background:#17150f;color:#fff;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.grab }}</button>
+                    </div>
+                    <span style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ p.soldText }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.search }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onClick="{{ back }}" style="width:40px;height:40px;flex:none;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button>
+              <input autoFocus="{{ true }}" value="{{ query }}" onChange="{{ onQuery }}" placeholder="{{ tx.searchPh }}" style="flex:1;min-width:0;height:44px;border-radius:12px;border:2px solid #17150f;padding:0 14px;font:500 14px Archivo,'IBM Plex Sans Arabic';outline:none;background:#fff">
+            </div>
+            <sc-if value="{{ noQuery }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.recent }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ recents }}" as="r" hint-placeholder-count="4">
+                    <button onClick="{{ r.set }}" style="height:34px;padding:0 14px;border-radius:999px;border:1px solid #e0dbd2;background:#fff;font:500 13px Archivo,'IBM Plex Sans Arabic'">{{ r.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="font:800 14px Archivo,'IBM Plex Sans Arabic';margin-top:8px">{{ tx.trending }}</div>
+                <div style="display:flex;flex-direction:column">
+                  <sc-for list="{{ trending }}" as="r" hint-placeholder-count="5">
+                    <button onClick="{{ r.set }}" style="border:none;border-bottom:1px solid #e6e2da;background:none;height:46px;display:flex;align-items:center;gap:12px;text-align:start;font:500 14px Archivo,'IBM Plex Sans Arabic';color:#17150f"><span style="font:700 12px 'JetBrains Mono',monospace;color:#e8452c;width:18px">{{ r.n }}</span>{{ r.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div class="nos" style="display:flex;gap:6px;overflow-x:auto">
+                  <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="4">
+                    <button onClick="{{ s.set }}" style="flex:none;height:32px;padding:0 12px;border-radius:8px;border:1px solid {{ s.border }};background:{{ s.bg }};color:{{ s.fg }};font:600 12px Archivo,'IBM Plex Sans Arabic'">{{ s.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ resultsText }}</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 10px">
+                  <sc-for list="{{ results }}" as="p" hint-placeholder-count="4">
+                    <div onClick="{{ p.open }}" style="background:#fff;border-radius:16px;overflow:hidden;cursor:pointer">
+                      <div style="aspect-ratio:1;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ p.img }}</div>
+                      <div style="padding:10px;display:flex;flex-direction:column;gap:4px">
+                        <div style="font:500 13px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ p.name }}</div>
+                        <b style="font:800 16px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ p.priceText }}</b>
+                        <span style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">★ {{ p.rating }} · {{ p.metaText }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.product }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;padding-bottom:20px">
+            <div style="position:relative;height:360px;background:repeating-linear-gradient(135deg,#ece8e1 0 10px,#e4dfd6 10px 20px);display:flex;align-items:center;justify-content:center;font:500 11px 'JetBrains Mono',monospace;color:#8a8478">{{ p.img }} · product shot
+              <button onClick="{{ back }}" style="position:absolute;top:10px;inset-inline-start:14px;width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button>
+              <button onClick="{{ shareToast }}" style="position:absolute;top:10px;inset-inline-end:14px;height:40px;padding:0 14px;border-radius:999px;border:none;background:#fff;font:600 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.share }}</button>
+              <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px"><span style="width:18px;height:6px;border-radius:3px;background:#17150f"></span><span style="width:6px;height:6px;border-radius:3px;background:#b9b2a5"></span><span style="width:6px;height:6px;border-radius:3px;background:#b9b2a5"></span><span style="width:6px;height:6px;border-radius:3px;background:#b9b2a5"></span></div>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:14px;background:#fff;border-radius:22px 22px 0 0;margin-top:-20px;position:relative">
+              <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                <span style="font:900 30px Archivo,'IBM Plex Sans Arabic';color:#e8452c;letter-spacing:-1px;white-space:nowrap">{{ p.priceText }}</span>
+                <span style="font:400 14px Archivo,'IBM Plex Sans Arabic';color:#8a8478;text-decoration:line-through;white-space:nowrap">{{ p.wasText }}</span>
+                <span style="background:#e8452c;color:#fff;font:800 12px Archivo,'IBM Plex Sans Arabic';padding:3px 7px;border-radius:6px;white-space:nowrap">{{ p.offText }}</span>
+              </div>
+              <div style="font:600 18px/1.3 Archivo,'IBM Plex Sans Arabic';text-wrap:pretty">{{ p.name }}</div>
+              <div style="font:500 13px Archivo,'IBM Plex Sans Arabic';color:#6b665c">★ {{ p.rating }} · {{ p.reviews }} {{ tx.reviewsL }} · {{ p.sold }} {{ tx.sold }}</div>
+              <sc-if value="{{ isWholesale }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid #e6e2da;border-radius:14px;overflow:hidden">
+                  <div style="padding:10px 12px;font:800 13px Archivo,'IBM Plex Sans Arabic';background:#f5f3ef">{{ tx.wsPricing }}</div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr)">
+                    <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+                      <button onClick="{{ t.set }}" style="border:none;border-top:2px solid {{ t.border }};background:{{ t.bg }};padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:3px"><b style="font:800 15px Archivo,'IBM Plex Sans Arabic';color:#17150f;white-space:nowrap">{{ t.priceText }}</b><span style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ t.range }}</span></button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.color }}: <span style="font-weight:500;color:#6b665c">{{ colorName }}</span></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <sc-for list="{{ colors }}" as="c" hint-placeholder-count="3">
+                    <button onClick="{{ c.set }}" style="height:38px;padding:0 16px;border-radius:10px;border:2px solid {{ c.border }};background:#fff;font:600 13px Archivo,'IBM Plex Sans Arabic'">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.quantity }}<div style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ qtyHint }}</div></div>
+                <div style="display:flex;align-items:center;border:1px solid #e0dbd2;border-radius:12px;overflow:hidden">
+                  <button onClick="{{ dec }}" style="width:44px;height:44px;border:none;background:#f5f3ef;font:700 18px Archivo,'IBM Plex Sans Arabic'">−</button>
+                  <span style="width:52px;text-align:center;font:700 15px 'JetBrains Mono',monospace">{{ qty }}</span>
+                  <button onClick="{{ inc }}" style="width:44px;height:44px;border:none;background:#f5f3ef;font:700 18px Archivo,'IBM Plex Sans Arabic'">+</button>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;border-top:1px solid #e6e2da;border-bottom:1px solid #e6e2da">
+                <div style="display:flex;justify-content:space-between;padding:12px 0;font:500 13px Archivo,'IBM Plex Sans Arabic'"><span style="color:#6b665c">{{ tx.delivery }}</span><span><b style="color:#1f8a4c">{{ tx.free }}</b> · {{ tx.arrives }}</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px 0;font:500 13px Archivo,'IBM Plex Sans Arabic';border-top:1px solid #efece6"><span style="color:#6b665c">{{ tx.returns }}</span><span>{{ tx.returnsSub }}</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:48px;height:48px;border-radius:12px;background:#17150f;color:#fff;display:flex;align-items:center;justify-content:center;font:900 16px Archivo,'IBM Plex Sans Arabic'">{{ p.sellerInitial }}</div>
+                <div style="flex:1;min-width:0"><div style="font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ p.seller }}</div><div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.sellerMeta }}</div></div>
+                <button onClick="{{ goChat }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid #17150f;background:#fff;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.chat }}</button>
+                <button onClick="{{ goStore }}" style="height:36px;padding:0 14px;border-radius:999px;border:none;background:#17150f;color:#fff;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.store }}</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px"><div style="font:800 16px Archivo,'IBM Plex Sans Arabic'">{{ tx.reviews }}</div><span style="font:600 13px Archivo,'IBM Plex Sans Arabic';color:#e8452c">★ {{ p.rating }}</span></div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="background:#f5f3ef;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;font:600 12px Archivo,'IBM Plex Sans Arabic'"><span>{{ tx.rev1n }}</span><span style="color:#e8452c">★★★★★</span></div><div style="font:400 13px/1.45 Archivo,'IBM Plex Sans Arabic';color:#3d3a33">{{ tx.rev1 }}</div></div>
+                <div style="background:#f5f3ef;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;font:600 12px Archivo,'IBM Plex Sans Arabic'"><span>{{ tx.rev2n }}</span><span style="color:#e8452c">★★★★☆</span></div><div style="font:400 13px/1.45 Archivo,'IBM Plex Sans Arabic';color:#3d3a33">{{ tx.rev2 }}</div></div>
+              </div>
+              <div style="font:800 16px Archivo,'IBM Plex Sans Arabic';margin-top:6px">{{ tx.alsoLike }}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <sc-for list="{{ related }}" as="r" hint-placeholder-count="4">
+                  <div onClick="{{ r.open }}" style="cursor:pointer;display:flex;flex-direction:column;gap:6px">
+                    <div style="aspect-ratio:1;border-radius:14px;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ r.img }}</div>
+                    <div style="font:500 12px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ r.name }}</div>
+                    <b style="font:800 14px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ r.priceText }}</b>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.cart }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:900 26px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.cart }}</div><span style="font:500 13px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ cartCountText }}</span></div>
+            <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fff;border-radius:20px;padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+                <div style="width:72px;height:72px;border-radius:50%;background:#f5f3ef;display:flex;align-items:center;justify-content:center;font:900 22px Archivo,'IBM Plex Sans Arabic'">0</div>
+                <div style="font:800 17px Archivo,'IBM Plex Sans Arabic'">{{ tx.cartEmpty }}</div>
+                <button onClick="{{ goHome }}" style="height:44px;padding:0 22px;border:none;border-radius:999px;background:#17150f;color:#fff;font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.startShopping }}</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ cartHas }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#1f8a4c;color:#fff;border-radius:12px;padding:10px 14px;font:600 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.freeUnlocked }}</div>
+              <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
+                <div style="background:#fff;border-radius:16px;padding:12px;display:flex;gap:12px">
+                  <div onClick="{{ c.open }}" style="cursor:pointer;width:84px;height:84px;flex:none;border-radius:12px;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 9px 'JetBrains Mono',monospace;color:#8a8478">{{ c.img }}</div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                    <div style="display:flex;gap:8px"><div style="flex:1;font:500 13px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ c.name }}</div><button onClick="{{ c.remove }}" style="border:none;background:none;font:500 18px/1 Archivo,'IBM Plex Sans Arabic';color:#8a8478;padding:0">×</button></div>
+                    <span style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ c.variant }}</span>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto">
+                      <b style="font:800 15px Archivo,'IBM Plex Sans Arabic';white-space:nowrap">{{ c.lineText }}</b>
+                      <div style="display:flex;align-items:center;border:1px solid #e0dbd2;border-radius:999px">
+                        <button onClick="{{ c.dec }}" style="width:30px;height:30px;border:none;background:none;font:700 15px Archivo,'IBM Plex Sans Arabic'">−</button>
+                        <span style="min-width:28px;text-align:center;font:700 13px 'JetBrains Mono',monospace">{{ c.qty }}</span>
+                        <button onClick="{{ c.inc }}" style="width:30px;height:30px;border:none;background:none;font:700 15px Archivo,'IBM Plex Sans Arabic'">+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+              <button onClick="{{ applyCoupon }}" style="border:1px dashed #b9b2a5;background:#fff;border-radius:14px;height:48px;display:flex;justify-content:space-between;align-items:center;padding:0 14px;font:600 13px Archivo,'IBM Plex Sans Arabic';color:#17150f"><span>{{ couponLabel }}</span><span style="color:#e8452c">{{ couponAction }}</span></button>
+              <div style="background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;font:500 13px Archivo,'IBM Plex Sans Arabic'">
+                <div style="display:flex;justify-content:space-between"><span style="color:#6b665c">{{ tx.subtotal }}</span><span>{{ sum.sub }}</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:#6b665c">{{ tx.discount }}</span><span style="color:#e8452c">{{ sum.disc }}</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:#6b665c">{{ tx.delivery }}</span><span style="color:#1f8a4c">{{ tx.free }}</span></div>
+                <div style="display:flex;justify-content:space-between;border-top:1px solid #e6e2da;padding-top:10px;font:900 18px Archivo,'IBM Plex Sans Arabic'"><span>{{ tx.total }}</span><span>{{ sum.total }}</span></div>
+              </div>
+              <button onClick="{{ goCheckout }}" style="height:54px;border:none;border-radius:16px;background:#e8452c;color:#fff;font:800 16px Archivo,'IBM Plex Sans Arabic'" style-hover="background:#cf3a22">{{ tx.checkout }} · {{ sum.total }}</button>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.checkout }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:14px">
+            <sc-if value="{{ notPlaced }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div style="font:900 24px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.checkout }}</div></div>
+              <div style="background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;font:800 14px Archivo,'IBM Plex Sans Arabic'"><span>{{ tx.deliverTo }}</span><span style="color:#e8452c;font-weight:600;font-size:13px">{{ tx.change }}</span></div>
+                <div style="font:500 13px/1.45 Archivo,'IBM Plex Sans Arabic';color:#3d3a33">{{ tx.name }} · <span dir="ltr">+965 5555 1234</span><br>{{ tx.address }}</div>
+              </div>
+              <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.delivery }}</div>
+              <sc-for list="{{ shipOpts }}" as="o" hint-placeholder-count="2">
+                <button onClick="{{ o.set }}" style="background:#fff;border:2px solid {{ o.border }};border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;text-align:start">
+                  <span style="width:18px;height:18px;border-radius:50%;border:2px solid #17150f;box-sizing:border-box;background:{{ o.dot }}"></span>
+                  <span style="flex:1;display:flex;flex-direction:column;gap:2px"><b style="font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ o.label }}</b><span style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ o.sub }}</span></span>
+                  <b style="font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ o.price }}</b>
+                </button>
+              </sc-for>
+              <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.payment }}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <sc-for list="{{ payOpts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.set }}" style="height:56px;background:#fff;border:2px solid {{ o.border }};border-radius:14px;font:700 13px Archivo,'IBM Plex Sans Arabic';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">{{ o.label }}<span style="font:500 10px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ o.sub }}</span></button>
+                </sc-for>
+              </div>
+              <div style="background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;font:500 13px Archivo,'IBM Plex Sans Arabic'">
+                <div style="display:flex;justify-content:space-between"><span style="color:#6b665c">{{ cartCountText }}</span><span>{{ sum.sub }}</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:#6b665c">{{ tx.discount }}</span><span style="color:#e8452c">{{ sum.disc }}</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:#6b665c">{{ tx.delivery }}</span><span>{{ sum.ship }}</span></div>
+                <div style="display:flex;justify-content:space-between;border-top:1px solid #e6e2da;padding-top:10px;font:900 18px Archivo,'IBM Plex Sans Arabic'"><span>{{ tx.total }}</span><span>{{ sum.grand }}</span></div>
+              </div>
+              <button onClick="{{ placeOrder }}" style="height:54px;border:none;border-radius:16px;background:#e8452c;color:#fff;font:800 16px Archivo,'IBM Plex Sans Arabic'" style-hover="background:#cf3a22">{{ tx.pay }} {{ sum.grand }} · {{ payLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ placed }}" hint-placeholder-val="{{ false }}">
+              <div style="min-height:640px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center">
+                <div style="width:96px;height:96px;border-radius:50%;background:#1f8a4c;color:#fff;display:flex;align-items:center;justify-content:center;font:900 44px Archivo,'IBM Plex Sans Arabic'">✓</div>
+                <div style="font:900 28px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.orderPlaced }}</div>
+                <div style="font:500 14px/1.5 Archivo,'IBM Plex Sans Arabic';color:#6b665c">#NO1-48213 · {{ payLabel }}<br>{{ tx.arrives }}</div>
+                <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:12px">
+                  <button onClick="{{ goOrders }}" style="height:52px;border:none;border-radius:16px;background:#17150f;color:#fff;font:800 15px Archivo,'IBM Plex Sans Arabic'">{{ tx.trackOrder }}</button>
+                  <button onClick="{{ goHome }}" style="height:52px;border:1px solid #17150f;border-radius:16px;background:none;font:700 15px Archivo,'IBM Plex Sans Arabic'">{{ tx.continueShopping }}</button>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.orders }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div style="font:900 24px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.myOrders }}</div></div>
+            <div style="background:#17150f;color:#fff;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;font:500 12px 'JetBrains Mono',monospace;opacity:.75"><span>#NO1-48213</span><span>{{ tx.arrives }}</span></div>
+              <div style="font:900 22px Archivo,'IBM Plex Sans Arabic'">{{ tx.shipped }}</div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ track }}" as="s" hint-placeholder-count="5">
+                  <div style="display:flex;gap:12px">
+                    <div style="display:flex;flex-direction:column;align-items:center;width:16px"><span style="width:14px;height:14px;border-radius:50%;background:{{ s.dot }};border:2px solid {{ s.ring }};box-sizing:border-box;flex:none"></span><span style="flex:1;width:2px;background:{{ s.line }};min-height:22px"></span></div>
+                    <div style="padding-bottom:12px;display:flex;flex-direction:column;gap:2px"><b style="font:700 14px Archivo,'IBM Plex Sans Arabic';opacity:{{ s.op }}">{{ s.label }}</b><span style="font:500 11px Archivo,'IBM Plex Sans Arabic';opacity:.6">{{ s.when }}</span></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.pastOrders }}</div>
+            <div style="background:#fff;border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center"><div style="width:56px;height:56px;border-radius:10px;background:repeating-linear-gradient(135deg,#ece8e1 0 6px,#e4dfd6 6px 12px)"></div><div style="flex:1"><div style="font:700 13px Archivo,'IBM Plex Sans Arabic'">#NO1-47102 · 3 {{ tx.items }}</div><div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#1f8a4c">{{ tx.deliveredOn }} 22/09</div></div><button onClick="{{ reorder }}" style="height:34px;padding:0 12px;border-radius:999px;border:1px solid #17150f;background:none;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.buyAgain }}</button></div>
+            <div style="background:#fff;border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center"><div style="width:56px;height:56px;border-radius:10px;background:repeating-linear-gradient(135deg,#ece8e1 0 6px,#e4dfd6 6px 12px)"></div><div style="flex:1"><div style="font:700 13px Archivo,'IBM Plex Sans Arabic'">#NO1-45877 · 1 {{ tx.item }}</div><div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#1f8a4c">{{ tx.deliveredOn }} 03/09</div></div><button onClick="{{ reorder }}" style="height:34px;padding:0 12px;border-radius:999px;border:1px solid #17150f;background:none;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.buyAgain }}</button></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.wish }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div style="font:900 24px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.wishlist }}</div></div>
+            <sc-if value="{{ wishEmpty }}" hint-placeholder-val="{{ false }}"><div style="background:#fff;border-radius:20px;padding:32px;text-align:center;font:500 14px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.wishEmpty }}</div></sc-if>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 10px">
+              <sc-for list="{{ wishItems }}" as="p" hint-placeholder-count="2">
+                <div style="background:#fff;border-radius:16px;overflow:hidden">
+                  <div onClick="{{ p.open }}" style="cursor:pointer;position:relative;aspect-ratio:1;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ p.img }}</div>
+                  <div style="padding:10px;display:flex;flex-direction:column;gap:6px">
+                    <div style="font:500 13px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ p.name }}</div>
+                    <b style="font:800 15px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ p.priceText }}</b>
+                    <div style="display:flex;gap:6px"><button onClick="{{ p.quickAdd }}" style="flex:1;height:32px;border:none;border-radius:999px;background:#17150f;color:#fff;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.add }}</button><button onClick="{{ p.toggleWish }}" style="width:32px;height:32px;border:1px solid #e0dbd2;border-radius:50%;background:none;font:500 14px Archivo,'IBM Plex Sans Arabic'">×</button></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.account }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:14px;padding:0 16px 24px">
+            <div style="background:#17150f;color:#fff;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:16px;margin-top:6px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:56px;height:56px;border-radius:50%;background:#e8452c;display:flex;align-items:center;justify-content:center;font:900 20px Archivo,'IBM Plex Sans Arabic'">FA</div>
+                <div style="flex:1"><div style="font:800 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.name }}</div><div style="font:600 12px Archivo,'IBM Plex Sans Arabic';color:#ffd23f">{{ tx.gold }}</div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #34312a;padding-top:14px;text-align:center">
+                <button onClick="{{ goOrders }}" style="border:none;background:none;color:#fff;display:flex;flex-direction:column;gap:2px;align-items:center"><b style="font:900 20px Archivo,'IBM Plex Sans Arabic'">12</b><span style="font:500 11px Archivo,'IBM Plex Sans Arabic';opacity:.7">{{ tx.orders }}</span></button>
+                <button onClick="{{ goWish }}" style="border:none;background:none;color:#fff;display:flex;flex-direction:column;gap:2px;align-items:center"><b style="font:900 20px Archivo,'IBM Plex Sans Arabic'">{{ wishCount }}</b><span style="font:500 11px Archivo,'IBM Plex Sans Arabic';opacity:.7">{{ tx.wishlist }}</span></button>
+                <button onClick="{{ couponToast }}" style="border:none;background:none;color:#fff;display:flex;flex-direction:column;gap:2px;align-items:center"><b style="font:900 20px Archivo,'IBM Plex Sans Arabic'">2,450</b><span style="font:500 11px Archivo,'IBM Plex Sans Arabic';opacity:.7">{{ tx.points }}</span></button>
+              </div>
+            </div>
+            <div style="background:#fff;border-radius:18px;display:flex;flex-direction:column;overflow:hidden">
+              <sc-for list="{{ menu }}" as="m" hint-placeholder-count="8">
+                <button onClick="{{ m.go }}" style="border:none;border-bottom:1px solid #efece6;background:none;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font:600 14px Archivo,'IBM Plex Sans Arabic';color:#17150f" style-hover="background:#f5f3ef"><span>{{ m.label }}</span><span style="font:500 13px Archivo,'IBM Plex Sans Arabic';color:#8a8478">{{ m.value }} ›</span></button>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;background:#e6e2da;border-radius:12px;padding:4px;gap:4px">
+              <sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+                <button onClick="{{ m.set }}" style="height:38px;border:none;border-radius:9px;background:{{ m.bg }};color:{{ m.fg }};font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ m.modeLabel }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.rfq }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div style="font:900 24px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.rfq }}</div></div>
+            <p style="margin:0;font:400 13px/1.5 Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.rfqIntro }}</p>
+            <label style="display:flex;flex-direction:column;gap:6px;font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.product }}<input value="{{ rfq.item }}" onChange="{{ rfq.onItem }}" placeholder="{{ tx.rfqItemPh }}" style="height:46px;border-radius:12px;border:1px solid #d6d0c5;padding:0 12px;font:500 14px Archivo,'IBM Plex Sans Arabic';background:#fff;outline:none"></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <label style="display:flex;flex-direction:column;gap:6px;font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.quantity }}<input value="{{ rfq.qty }}" onChange="{{ rfq.onQty }}" placeholder="500" inputMode="numeric" style="height:46px;border-radius:12px;border:1px solid #d6d0c5;padding:0 12px;font:500 14px Archivo,'IBM Plex Sans Arabic';background:#fff;outline:none;min-width:0"></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.targetPrice }}<input value="{{ rfq.price }}" onChange="{{ rfq.onPrice }}" placeholder="0.750" style="height:46px;border-radius:12px;border:1px solid #d6d0c5;padding:0 12px;font:500 14px Archivo,'IBM Plex Sans Arabic';background:#fff;outline:none;min-width:0"></label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:6px;font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.details }}<textarea placeholder="{{ tx.detailsPh }}" style="height:100px;border-radius:12px;border:1px solid #d6d0c5;padding:12px;font:500 14px Archivo,'IBM Plex Sans Arabic';background:#fff;outline:none;resize:none"></textarea></label>
+            <div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#e8452c;min-height:16px">{{ rfq.error }}</div>
+            <button onClick="{{ rfq.submit }}" style="height:54px;border:none;border-radius:16px;background:#17150f;color:#fff;font:800 15px Archivo,'IBM Plex Sans Arabic'">{{ tx.sendSuppliers }}</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.chat }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;min-height:100%">
+            <div style="padding:6px 16px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e6e2da"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div><div style="font:800 15px Archivo,'IBM Plex Sans Arabic'">{{ p.seller }}</div><div style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#1f8a4c">{{ tx.online }}</div></div></div>
+            <div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="3">
+                <div style="align-self:{{ m.align }};max-width:78%;background:{{ m.bg }};color:{{ m.fg }};padding:10px 12px;border-radius:16px;font:500 13px/1.45 Archivo,'IBM Plex Sans Arabic'">{{ m.text }}</div>
+              </sc-for>
+            </div>
+            <div style="padding:10px 12px 14px;display:flex;gap:8px;border-top:1px solid #e6e2da;background:#fff">
+              <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onDraftKey }}" placeholder="{{ tx.msgPh }}" style="flex:1;min-width:0;height:44px;border-radius:999px;border:1px solid #d6d0c5;padding:0 16px;font:500 14px Archivo,'IBM Plex Sans Arabic';outline:none">
+              <button onClick="{{ sendMsg }}" style="height:44px;padding:0 18px;border:none;border-radius:999px;background:#e8452c;color:#fff;font:700 13px Archivo,'IBM Plex Sans Arabic'">{{ tx.send }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.store }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column">
+            <div style="height:130px;background:repeating-linear-gradient(135deg,#2c2a24 0 10px,#24221d 10px 20px);position:relative;display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">store cover<button onClick="{{ back }}" style="position:absolute;top:10px;inset-inline-start:14px;width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button></div>
+            <div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:flex-end;gap:12px;margin-top:-28px">
+                <div style="width:68px;height:68px;border-radius:18px;background:#e8452c;color:#fff;border:4px solid #f5f3ef;display:flex;align-items:center;justify-content:center;font:900 24px Archivo,'IBM Plex Sans Arabic'">{{ p.sellerInitial }}</div>
+                <div style="flex:1;padding-bottom:4px"><div style="font:800 17px Archivo,'IBM Plex Sans Arabic'">{{ p.seller }}</div><div style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.storeMeta }}</div></div>
+              </div>
+              <button onClick="{{ followToggle }}" style="height:44px;border-radius:12px;border:{{ follow.border }};background:{{ follow.bg }};color:{{ follow.fg }};font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ follow.label }}</button>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 10px">
+                <sc-for list="{{ storeItems }}" as="r" hint-placeholder-count="4">
+                  <div onClick="{{ r.open }}" style="cursor:pointer;background:#fff;border-radius:16px;overflow:hidden">
+                    <div style="aspect-ratio:1;background:repeating-linear-gradient(135deg,#ece8e1 0 8px,#e4dfd6 8px 16px);display:flex;align-items:center;justify-content:center;font:500 10px 'JetBrains Mono',monospace;color:#8a8478">{{ r.img }}</div>
+                    <div style="padding:10px;display:flex;flex-direction:column;gap:4px"><div style="font:500 12px/1.3 Archivo,'IBM Plex Sans Arabic'">{{ r.name }}</div><b style="font:800 14px Archivo,'IBM Plex Sans Arabic';color:#e8452c;white-space:nowrap">{{ r.priceText }}</b></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.locale }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div style="font:900 24px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tx.langCur }}</div></div>
+            <div style="font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.language }}</div>
+            <div style="background:#fff;border-radius:18px;overflow:hidden;display:flex;flex-direction:column">
+              <sc-for list="{{ langs }}" as="l" hint-placeholder-count="8">
+                <button onClick="{{ l.set }}" style="border:none;border-bottom:1px solid #efece6;background:{{ l.bg }};height:54px;display:flex;align-items:center;gap:12px;padding:0 16px;text-align:start;color:#17150f">
+                  <span style="flex:1;display:flex;flex-direction:column;gap:1px"><b style="font:700 15px Archivo,'IBM Plex Sans Arabic'">{{ l.native }}</b><span style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#8a8478">{{ l.en }}</span></span>
+                  <span style="width:24px;height:24px;border-radius:50%;background:#e8452c;color:#fff;font:800 13px/24px Archivo,'IBM Plex Sans Arabic';text-align:center;opacity:{{ l.op }}">✓</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font:800 14px Archivo,'IBM Plex Sans Arabic';margin-top:6px">{{ tx.currency }}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <sc-for list="{{ curs }}" as="c" hint-placeholder-count="10">
+                <button onClick="{{ c.set }}" style="background:#fff;border:2px solid {{ c.border }};border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;text-align:start;color:#17150f">
+                  <span style="display:flex;justify-content:space-between;gap:6px;width:100%"><b style="font:800 14px 'JetBrains Mono',monospace">{{ c.code }}</b><span style="font:700 13px Archivo,'IBM Plex Sans Arabic';color:#e8452c">{{ c.sym }}</span></span>
+                  <span style="font:500 11px Archivo,'IBM Plex Sans Arabic';color:#6b665c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font:500 11px/1.5 Archivo,'IBM Plex Sans Arabic';color:#8a8478">{{ tx.ratesNote }}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.notifs }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:6px 16px 24px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ back }}" style="width:40px;height:40px;border-radius:50%;border:none;background:#fff;font:700 18px Archivo,'IBM Plex Sans Arabic'">{{ tx.back }}</button><div style="font:900 24px Archivo,'IBM Plex Sans Arabic';letter-spacing:-1px">{{ tx.notifs }}</div></div>
+            <button onClick="{{ goOrders }}" style="text-align:start;border:none;background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px"><b style="font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.n1 }}</b><span style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.n1s }}</span></button>
+            <button onClick="{{ goDeals }}" style="text-align:start;border:none;background:#ffd23f;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px"><b style="font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.n2 }}</b><span style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#3d3a33">{{ tx.n2s }}</span></button>
+            <button onClick="{{ goRfq }}" style="text-align:start;border:none;background:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px"><b style="font:700 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.n3 }}</b><span style="font:500 12px Archivo,'IBM Plex Sans Arabic';color:#6b665c">{{ tx.n3s }}</span></button>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;height:84px;background:#fff;border-top:1px solid #e6e2da;display:grid;grid-template-columns:repeat(5,1fr);padding:0 6px 22px">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+            <button onClick="{{ t.go }}" style="position:relative;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:{{ t.fg }};font:{{ t.weight }} 11px Archivo,'IBM Plex Sans Arabic';white-space:nowrap">
+              <span style="width:22px;height:22px;border-radius:{{ t.radius }};background:{{ t.mark }};border:2px solid {{ t.fg }};box-sizing:border-box"></span>
+              {{ t.label }}
+              <span style="position:absolute;top:6px;left:54%;min-width:18px;height:18px;border-radius:9px;background:#e8452c;color:#fff;font:700 10px/18px Archivo,'IBM Plex Sans Arabic';opacity:{{ t.badgeOp }}">{{ t.badge }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ is.product }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;background:#fff;border-top:1px solid #e6e2da;display:flex;gap:8px;padding:10px 14px 28px;align-items:center">
+          <button onClick="{{ toggleWishP }}" style="width:48px;height:48px;flex:none;border-radius:14px;border:1px solid #e0dbd2;background:#fff;font:600 20px Archivo,'IBM Plex Sans Arabic';color:{{ p.wishColor }}">{{ p.wishGlyph }}</button>
+          <button onClick="{{ goCart }}" style="position:relative;width:48px;height:48px;flex:none;border-radius:14px;border:1px solid #e0dbd2;background:#fff;font:700 12px Archivo,'IBM Plex Sans Arabic'">{{ tx.cart }}<span style="position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:#e8452c;color:#fff;font:700 10px/18px Archivo,'IBM Plex Sans Arabic'">{{ cartCount }}</span></button>
+          <button onClick="{{ addToCart }}" style="flex:1;height:48px;border-radius:14px;border:2px solid #17150f;background:#fff;font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.addToCart }}</button>
+          <button onClick="{{ buyNow }}" style="flex:1;height:48px;border-radius:14px;border:none;background:#e8452c;color:#fff;font:800 14px Archivo,'IBM Plex Sans Arabic'">{{ tx.buyNow }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:50%;top:64px;transform:translateX(-50%);background:#17150f;color:#fff;padding:10px 16px;border-radius:999px;font:600 13px Archivo,'IBM Plex Sans Arabic';white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:20">{{ toast }}</div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;language&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ar&quot;,&quot;en&quot;,&quot;fr&quot;,&quot;es&quot;,&quot;tr&quot;,&quot;ur&quot;,&quot;hi&quot;,&quot;zh&quot;],&quot;default&quot;:&quot;ar&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;KWD&quot;,&quot;EGP&quot;,&quot;SAR&quot;,&quot;AED&quot;,&quot;QAR&quot;,&quot;BHD&quot;,&quot;OMR&quot;,&quot;JOD&quot;,&quot;IQD&quot;,&quot;MAD&quot;,&quot;USD&quot;,&quot;EUR&quot;,&quot;GBP&quot;,&quot;TRY&quot;,&quot;INR&quot;,&quot;PKR&quot;,&quot;CNY&quot;],&quot;default&quot;:&quot;KWD&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;defaultMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;retail&quot;,&quot;wholesale&quot;],&quot;default&quot;:&quot;retail&quot;,&quot;tsType&quot;:&quot;'retail'|'wholesale'&quot;}}">
+class Component extends DCLogic {
+  scrollRef = React.createRef();
+  endAt = Date.now() + (3 * 3600 + 27 * 60 + 14) * 1000;
+  P = [
+    { id: 1, name: 'ANC wireless earbuds, 30h battery', ar: 'سماعات لاسلكية بعزل الضوضاء، بطارية 30 ساعة', cat: 'Electronics', price: 8.9, was: 14.5, rating: 4.7, reviews: 2140, sold: '12.4k', pct: 82, seller: 'Soundline Official', img: 'earbuds', colors: ['Black', 'White', 'Sage'] },
+    { id: 2, name: 'Oversized cotton hoodie', ar: 'هودي قطني واسع', cat: 'Fashion', price: 6.25, was: 11, rating: 4.6, reviews: 980, sold: '8.1k', pct: 64, seller: 'Basics Lab', img: 'hoodie', colors: ['Sand', 'Charcoal', 'Olive'] },
+    { id: 3, name: 'Ceramic pour-over coffee set', ar: 'طقم تقطير قهوة سيراميك', cat: 'Home', price: 5.4, was: 8.75, rating: 4.8, reviews: 412, sold: '3.2k', pct: 47, seller: 'Kiln & Co', img: 'coffee set', colors: ['Cream', 'Terracotta'] },
+    { id: 4, name: 'Smart watch, AMOLED, GPS', ar: 'ساعة ذكية بشاشة AMOLED و GPS', cat: 'Electronics', price: 15.9, was: 29, rating: 4.5, reviews: 1670, sold: '6.7k', pct: 91, seller: 'Soundline Official', img: 'smart watch', colors: ['Black', 'Silver'] },
+    { id: 5, name: 'Vitamin C brightening serum, 30ml', ar: 'سيروم فيتامين سي للنضارة، 30 مل', cat: 'Beauty', price: 3.2, was: 5.5, rating: 4.7, reviews: 3020, sold: '21k', pct: 73, seller: 'Glow Kuwait', img: 'serum', colors: ['30ml', '50ml'] },
+    { id: 6, name: 'Running shoes, knit upper', ar: 'حذاء جري بنسيج محبوك', cat: 'Sports', price: 12.5, was: 19.9, rating: 4.6, reviews: 760, sold: '4.4k', pct: 38, seller: 'Stride Co', img: 'shoes', colors: ['White', 'Black', 'Coral'] },
+    { id: 7, name: 'Building blocks city set, 520 pcs', ar: 'مكعبات بناء مدينة، 520 قطعة', cat: 'Toys', price: 7.75, was: 12, rating: 4.9, reviews: 530, sold: '2.9k', pct: 55, seller: 'Brickyard', img: 'blocks', colors: ['City', 'Space'] },
+    { id: 8, name: '65W GaN fast charger, 3 ports', ar: 'شاحن سريع GaN بقوة 65 واط، 3 منافذ', cat: 'Electronics', price: 4.6, was: 7.9, rating: 4.8, reviews: 1890, sold: '15k', pct: 88, seller: 'Volt Supply', img: 'charger', colors: ['White', 'Black'] },
+    { id: 9, name: 'Linen bedsheet set, queen', ar: 'طقم شراشف كتان، مقاس كوين', cat: 'Home', price: 9.9, was: 16.5, rating: 4.6, reviews: 340, sold: '1.8k', pct: 29, seller: 'Kiln & Co', img: 'bedsheets', colors: ['Oat', 'Stone', 'Sky'] },
+    { id: 10, name: 'Magnetic car phone mount', ar: 'حامل جوال مغناطيسي للسيارة', cat: 'Auto', price: 2.35, was: 4.2, rating: 4.4, reviews: 610, sold: '9.3k', pct: 69, seller: 'Volt Supply', img: 'car mount', colors: ['Black'] },
+    { id: 11, name: 'Yoga mat, 6mm non-slip', ar: 'سجادة يوغا 6 مم مانعة للانزلاق', cat: 'Sports', price: 4.9, was: 8, rating: 4.7, reviews: 450, sold: '3.6k', pct: 51, seller: 'Stride Co', img: 'yoga mat', colors: ['Plum', 'Sage', 'Black'] },
+    { id: 12, name: 'Bamboo desk organizer', ar: 'منظم مكتب من الخيزران', cat: 'Office', price: 3.75, was: 6.1, rating: 4.5, reviews: 220, sold: '1.1k', pct: 22, seller: 'Basics Lab', img: 'organizer', colors: ['Natural'] }
+  ];
+  SUBS = {
+    Electronics: ['Phones', 'Audio', 'Chargers', 'Smart watches', 'Cameras', 'Gaming'],
+    Fashion: ['Women', 'Men', 'Kids', 'Shoes', 'Bags', 'Abayas'],
+    Home: ['Kitchen', 'Bedding', 'Decor', 'Storage', 'Lighting', 'Bath'],
+    Beauty: ['Skincare', 'Makeup', 'Fragrance', 'Hair', 'Nails', 'Tools'],
+    Sports: ['Fitness', 'Running', 'Yoga', 'Outdoor', 'Cycling', 'Swim'],
+    Toys: ['Blocks', 'Dolls', 'RC toys', 'Puzzles', 'Baby', 'Outdoor'],
+    Auto: ['Mounts', 'Cleaning', 'Lighting', 'Seat covers', 'Tools', 'Dash cams'],
+    Office: ['Desk', 'Stationery', 'Printers', 'Chairs', 'Bags', 'Storage']
+  };
+  AR_WORDS = { Electronics: 'إلكترونيات', Fashion: 'أزياء', Home: 'المنزل', Beauty: 'الجمال', Sports: 'رياضة', Toys: 'ألعاب', Auto: 'السيارات', Office: 'المكتب', All: 'الكل',
+    Phones: 'هواتف', Audio: 'صوتيات', Chargers: 'شواحن', 'Smart watches': 'ساعات ذكية', Cameras: 'كاميرات', Gaming: 'ألعاب فيديو', Women: 'نساء', Men: 'رجال', Kids: 'أطفال', Shoes: 'أحذية', Bags: 'حقائب', Abayas: 'عبايات',
+    Kitchen: 'المطبخ', Bedding: 'مفارش', Decor: 'ديكور', Storage: 'تخزين', Lighting: 'إضاءة', Bath: 'الحمام', Skincare: 'العناية بالبشرة', Makeup: 'مكياج', Fragrance: 'عطور', Hair: 'الشعر', Nails: 'الأظافر', Tools: 'أدوات',
+    Fitness: 'لياقة', Running: 'جري', Yoga: 'يوغا', Outdoor: 'خارجي', Cycling: 'دراجات', Swim: 'سباحة', Blocks: 'مكعبات', Dolls: 'دمى', 'RC toys': 'ألعاب تحكم', Puzzles: 'ألغاز', Baby: 'رضع',
+    Mounts: 'حوامل', Cleaning: 'تنظيف', 'Seat covers': 'أغطية مقاعد', 'Dash cams': 'كاميرات سيارة', Desk: 'مكتب', Stationery: 'قرطاسية', Printers: 'طابعات', Chairs: 'كراسي',
+    Black: 'أسود', White: 'أبيض', Sage: 'أخضر فاتح', Sand: 'رملي', Charcoal: 'فحمي', Olive: 'زيتي', Cream: 'كريمي', Terracotta: 'طوبي', Silver: 'فضي', Coral: 'مرجاني', City: 'مدينة', Space: 'فضاء', Oat: 'شوفاني', Stone: 'حجري', Sky: 'سماوي', Plum: 'برقوقي', Natural: 'طبيعي', '30ml': '30 مل', '50ml': '50 مل' };
+  LANGS = [['en', 'English', 'English'], ['ar', 'العربية', 'Arabic'], ['fr', 'Français', 'French'], ['es', 'Español', 'Spanish'], ['tr', 'Türkçe', 'Turkish'], ['ur', 'اردو', 'Urdu'], ['hi', 'हिन्दी', 'Hindi'], ['zh', '中文', 'Chinese']];
+  RTL = ['ar', 'ur'];
+  CUR = [
+    ['KWD', 'KD', 'د.ك', 1, 3, 'Kuwaiti dinar', 'دينار كويتي'],
+    ['EGP', 'E£', 'ج.م', 158, 2, 'Egyptian pound', 'جنيه مصري'],
+    ['SAR', 'SAR', 'ر.س', 12.22, 2, 'Saudi riyal', 'ريال سعودي'],
+    ['AED', 'AED', 'د.إ', 11.97, 2, 'UAE dirham', 'درهم إماراتي'],
+    ['QAR', 'QAR', 'ر.ق', 11.87, 2, 'Qatari riyal', 'ريال قطري'],
+    ['BHD', 'BD', 'د.ب', 1.229, 3, 'Bahraini dinar', 'دينار بحريني'],
+    ['OMR', 'OMR', 'ر.ع', 1.254, 3, 'Omani rial', 'ريال عماني'],
+    ['JOD', 'JD', 'د.أ', 2.31, 3, 'Jordanian dinar', 'دينار أردني'],
+    ['IQD', 'IQD', 'د.ع', 4270, 0, 'Iraqi dinar', 'دينار عراقي'],
+    ['MAD', 'MAD', 'د.م', 29.5, 2, 'Moroccan dirham', 'درهم مغربي'],
+    ['USD', '$', '$', 3.26, 2, 'US dollar', 'دولار أمريكي'],
+    ['EUR', '€', '€', 2.8, 2, 'Euro', 'يورو'],
+    ['GBP', '£', '£', 2.43, 2, 'British pound', 'جنيه إسترليني'],
+    ['TRY', '₺', '₺', 135, 2, 'Turkish lira', 'ليرة تركية'],
+    ['INR', '₹', '₹', 287, 0, 'Indian rupee', 'روبية هندية'],
+    ['PKR', 'Rs', 'روبية', 915, 0, 'Pakistani rupee', 'روبية باكستانية'],
+    ['CNY', '¥', '¥', 23.2, 2, 'Chinese yuan', 'يوان صيني']
+  ];
+  D = {
+    en: { deliverTo: 'Deliver to', city: 'Salmiya', searchPh: 'Search products, brands', search: 'Search', megaSale: 'MEGA SALE', upTo: 'Up to', off70: '70% off', endsIn: 'Ends in',
+      rfq: 'Request a quote', rfqSub: 'Tell suppliers what you need. Get offers in 24h.', fwd: '→', back: '←', flashDeals: 'Flash deals', seeAll: 'See all →', categories: 'Categories',
+      shopByType: 'Shop by type', topSellers: 'Top sellers', flash1: 'Flash', flash2: 'deals', roundEnds: 'Round ends in', grab: 'Grab', recent: 'Recent', trending: 'Trending', share: 'Share',
+      wsPricing: 'Wholesale pricing', color: 'Color', quantity: 'Quantity', delivery: 'Delivery', free: 'Free', arrives: 'Arrives Oct 4–6', returns: 'Returns', returnsSub: 'Free returns within 30 days',
+      sellerMeta: '98% positive · Ships from Kuwait', chat: 'Chat', store: 'Store', reviews: 'Reviews', reviewsL: 'reviews', sold: 'sold',
+      rev1: 'Arrived two days early and matches the photos. Packaging was solid.', rev2: 'Good quality for the price. Ordered 50 for our shop, the seller answered quickly.', rev1n: 'Noura K.', rev2n: 'Yousef M.',
+      alsoLike: 'You may also like', cart: 'Cart', cartEmpty: 'Your cart is empty', startShopping: 'Start shopping', freeUnlocked: 'Free delivery unlocked on this order', subtotal: 'Subtotal',
+      discount: 'Discount', total: 'Total', checkout: 'Checkout', change: 'Change', name: 'Fatima Al-Sabah', address: 'Block 4, Street 12, House 7, Salmiya', payment: 'Payment', pay: 'Pay',
+      orderPlaced: 'Order placed', trackOrder: 'Track order', continueShopping: 'Continue shopping', myOrders: 'My orders', shipped: 'Shipped', pastOrders: 'Past orders', items: 'items', item: 'item',
+      deliveredOn: 'Delivered', buyAgain: 'Buy again', wishlist: 'Wishlist', wishEmpty: 'Tap ♡ on any product to save it here.', add: 'Add', gold: 'NO1 Gold member', orders: 'Orders', points: 'Points',
+      rfqIntro: 'Verified suppliers reply with offers, usually within 24 hours.', product: 'Product', rfqItemPh: 'e.g. Branded cotton tote bags', targetPrice: 'Target price / pc', details: 'Details',
+      detailsPh: 'Material, size, printing, delivery date…', sendSuppliers: 'Send to suppliers', online: 'Online · replies in ~5 min', msgPh: 'Message seller', send: 'Send',
+      storeMeta: '★ 4.8 · 98% positive · Verified', notifs: 'Notifications', n1: 'Your order has shipped', n1s: '#NO1-48213 arrives Oct 4–6 · 2h ago', n2: 'Mega Sale is live', n2s: 'Up to 70% off. Ends tonight · 5h ago',
+      n3: '3 new quotes received', n3s: 'For "Branded tote bags" · Yesterday', addToCart: 'Add to cart', buyNow: 'Buy now', langCur: 'Language & currency', language: 'Language', currency: 'Currency',
+      ratesNote: 'Prices convert from KWD at indicative rates. Final amount is charged in the currency shown at checkout.',
+      retail: 'Retail', wholesale: 'Wholesale', retailSub: 'Single items', wholesaleSub: 'Bulk · MOQ pricing', retailMode: 'Retail mode', wholesaleMode: 'Wholesale mode',
+      bestMatch: 'Best match', priceUp: 'Price ↑', priceDown: 'Price ↓', topRated: 'Top rated', now: 'Now', onSale: 'On sale', upcoming: 'Upcoming',
+      standard: 'Standard', express: 'Express', expressSub: 'Tomorrow before 9 pm', knet: 'KNET', debit: 'Debit', card: 'Card', applePay: 'Apple Pay', faceId: 'Face ID', cash: 'Cash', onDelivery: 'On delivery',
+      s1: 'Ordered', s2: 'Packed', s3: 'Shipped', s4: 'Out for delivery', s5: 'Delivered', messages: 'Messages', addresses: 'Addresses', payMethods: 'Payment methods', help: 'Help center', soon: 'coming soon',
+      home: 'Home', browse: 'Browse', deals: 'Deals', me: 'Me', moq: 'MOQ 10 pcs', pcs: 'pcs', perPc: '/pc', claimed: 'claimed', results: 'results', resultsFor: 'for', pickedForYou: 'Picked for you',
+      topWholesale: 'Top wholesale picks', minOrder: 'Minimum order 10 pcs', limit: 'Limit 5 per customer', couponApplied: 'NO1SALE applied · 10% off', addCoupon: 'Add a coupon code', remove: 'Remove',
+      apply: 'Apply NO1SALE', following: 'Following', followStore: 'Follow store', t_added: 'Added to cart', t_removed: 'Removed', t_saved: 'Saved to wishlist', t_unsaved: 'Removed from wishlist',
+      t_link: 'Link copied', t_couponOn: 'Coupon applied', t_couponOff: 'Coupon removed', t_empty: 'Your cart is empty', t_quote: 'Quote request sent', t_points: '2,450 points ready to redeem',
+      e_item: 'Add the product you need.', e_qty: 'Quantity must be at least 10.', m_hello: 'Hi! Thanks for visiting. Ask me anything about sizes, bulk pricing or shipping.',
+      m_ws: 'For 50+ pcs I can do the tier-2 price and ship in 3 days.', m_rt: 'Yes, it is in stock and ships today from Kuwait.' },
+    ar: { deliverTo: 'التوصيل إلى', city: 'السالمية', searchPh: 'ابحث عن منتجات وماركات', search: 'بحث', megaSale: 'تخفيضات كبرى', upTo: 'خصم حتى', off70: '70%', endsIn: 'ينتهي خلال',
+      rfq: 'طلب عرض سعر', rfqSub: 'أخبر الموردين بما تحتاجه واستلم العروض خلال 24 ساعة.', fwd: '←', back: '→', flashDeals: 'عروض سريعة', seeAll: 'عرض الكل ←', categories: 'الأقسام',
+      shopByType: 'تسوق حسب النوع', topSellers: 'الأكثر مبيعاً', flash1: 'عروض', flash2: 'سريعة', roundEnds: 'تنتهي الجولة خلال', grab: 'اطلب', recent: 'عمليات البحث الأخيرة', trending: 'الأكثر بحثاً', share: 'مشاركة',
+      wsPricing: 'أسعار الجملة', color: 'اللون', quantity: 'الكمية', delivery: 'التوصيل', free: 'مجاني', arrives: 'يصل 4–6 أكتوبر', returns: 'الإرجاع', returnsSub: 'إرجاع مجاني خلال 30 يوماً',
+      sellerMeta: '98% تقييم إيجابي · يشحن من الكويت', chat: 'محادثة', store: 'المتجر', reviews: 'التقييمات', reviewsL: 'تقييم', sold: 'مُباع',
+      rev1: 'وصل قبل الموعد بيومين ومطابق للصور. التغليف ممتاز.', rev2: 'جودة ممتازة مقابل السعر. طلبت 50 قطعة لمحلنا والبائع رد بسرعة.', rev1n: 'نورة ك.', rev2n: 'يوسف م.',
+      alsoLike: 'قد يعجبك أيضاً', cart: 'السلة', cartEmpty: 'سلتك فارغة', startShopping: 'ابدأ التسوق', freeUnlocked: 'حصلت على توصيل مجاني لهذا الطلب', subtotal: 'المجموع الفرعي',
+      discount: 'الخصم', total: 'الإجمالي', checkout: 'إتمام الشراء', change: 'تغيير', name: 'فاطمة الصباح', address: 'قطعة 4، شارع 12، منزل 7، السالمية', payment: 'الدفع', pay: 'ادفع',
+      orderPlaced: 'تم تأكيد الطلب', trackOrder: 'تتبع الطلب', continueShopping: 'متابعة التسوق', myOrders: 'طلباتي', shipped: 'تم الشحن', pastOrders: 'الطلبات السابقة', items: 'منتجات', item: 'منتج',
+      deliveredOn: 'تم التوصيل', buyAgain: 'اطلب مرة أخرى', wishlist: 'المفضلة', wishEmpty: 'اضغط ♡ على أي منتج لحفظه هنا.', add: 'أضف', gold: 'عضو NO1 الذهبي', orders: 'الطلبات', points: 'النقاط',
+      rfqIntro: 'يرد الموردون المعتمدون بعروضهم عادةً خلال 24 ساعة.', product: 'المنتج', rfqItemPh: 'مثال: حقائب قماش مطبوعة بالشعار', targetPrice: 'السعر المستهدف / قطعة', details: 'التفاصيل',
+      detailsPh: 'الخامة، المقاس، الطباعة، موعد التسليم…', sendSuppliers: 'أرسل للموردين', online: 'متصل · يرد خلال 5 دقائق تقريباً', msgPh: 'راسل البائع', send: 'إرسال',
+      storeMeta: '★ 4.8 · 98% إيجابي · موثّق', notifs: 'الإشعارات', n1: 'تم شحن طلبك', n1s: '#NO1-48213 يصل 4–6 أكتوبر · قبل ساعتين', n2: 'التخفيضات الكبرى بدأت', n2s: 'خصم حتى 70%. تنتهي الليلة · قبل 5 ساعات',
+      n3: 'وصلتك 3 عروض أسعار جديدة', n3s: 'لطلب "حقائب قماش مطبوعة" · أمس', addToCart: 'أضف للسلة', buyNow: 'اشترِ الآن', langCur: 'اللغة والعملة', language: 'اللغة', currency: 'العملة',
+      ratesNote: 'تُحوّل الأسعار من الدينار الكويتي بأسعار صرف تقريبية. يُخصم المبلغ النهائي بالعملة المعروضة عند الدفع.',
+      retail: 'تجزئة', wholesale: 'جملة', retailSub: 'قطع فردية', wholesaleSub: 'كميات · أسعار الحد الأدنى', retailMode: 'وضع التجزئة', wholesaleMode: 'وضع الجملة',
+      bestMatch: 'الأكثر صلة', priceUp: 'السعر ↑', priceDown: 'السعر ↓', topRated: 'الأعلى تقييماً', now: 'الآن', onSale: 'متاح', upcoming: 'قادم',
+      standard: 'عادي', express: 'سريع', expressSub: 'غداً قبل 9 مساءً', knet: 'كي نت', debit: 'بطاقة سحب', card: 'بطاقة', applePay: 'Apple Pay', faceId: 'Face ID', cash: 'نقداً', onDelivery: 'عند الاستلام',
+      s1: 'تم الطلب', s2: 'تم التجهيز', s3: 'تم الشحن', s4: 'خرج للتوصيل', s5: 'تم التوصيل', messages: 'الرسائل', addresses: 'العناوين', payMethods: 'طرق الدفع', help: 'مركز المساعدة', soon: 'قريباً',
+      home: 'الرئيسية', browse: 'الأقسام', deals: 'العروض', me: 'حسابي', moq: 'الحد الأدنى 10 قطع', pcs: 'قطعة', perPc: '/قطعة', claimed: 'تم بيعه', results: 'نتيجة', resultsFor: 'لـ', pickedForYou: 'مختارات لك',
+      topWholesale: 'أفضل عروض الجملة', minOrder: 'الحد الأدنى للطلب 10 قطع', limit: 'الحد 5 لكل عميل', couponApplied: 'تم تطبيق NO1SALE · خصم 10%', addCoupon: 'أضف كود خصم', remove: 'إزالة',
+      apply: 'طبّق NO1SALE', following: 'متابَع', followStore: 'تابع المتجر', t_added: 'تمت الإضافة للسلة', t_removed: 'تمت الإزالة', t_saved: 'تم الحفظ في المفضلة', t_unsaved: 'تمت الإزالة من المفضلة',
+      t_link: 'تم نسخ الرابط', t_couponOn: 'تم تطبيق الكوبون', t_couponOff: 'تمت إزالة الكوبون', t_empty: 'سلتك فارغة', t_quote: 'تم إرسال طلب عرض السعر', t_points: '2,450 نقطة جاهزة للاستبدال',
+      e_item: 'أضف المنتج الذي تحتاجه.', e_qty: 'يجب ألا تقل الكمية عن 10.', m_hello: 'أهلاً! شكراً لزيارتك. اسألني عن المقاسات أو أسعار الجملة أو الشحن.',
+      m_ws: 'لطلب 50 قطعة أو أكثر أقدر أعطيك سعر الشريحة الثانية والشحن خلال 3 أيام.', m_rt: 'نعم، المنتج متوفر ويُشحن اليوم من الكويت.' },
+    fr: { home: 'Accueil', browse: 'Rayons', deals: 'Promos', cart: 'Panier', me: 'Moi', search: 'Rechercher', searchPh: 'Produits, marques', deliverTo: 'Livrer à', flashDeals: 'Ventes flash', seeAll: 'Tout voir →',
+      categories: 'Catégories', addToCart: 'Ajouter au panier', buyNow: 'Acheter', checkout: 'Paiement', total: 'Total', subtotal: 'Sous-total', delivery: 'Livraison', free: 'Gratuit', wishlist: 'Favoris',
+      myOrders: 'Mes commandes', language: 'Langue', currency: 'Devise', langCur: 'Langue et devise', retail: 'Détail', wholesale: 'Gros', retailMode: 'Mode détail', wholesaleMode: 'Mode gros', pickedForYou: 'Pour vous',
+      quantity: 'Quantité', color: 'Couleur', reviews: 'Avis', payment: 'Paiement', pay: 'Payer', orderPlaced: 'Commande passée', megaSale: 'MÉGA SOLDES', upTo: "Jusqu'à", off70: '-70%', endsIn: 'Fin dans',
+      t_added: 'Ajouté au panier', discount: 'Remise', orders: 'Commandes', points: 'Points' },
+    es: { home: 'Inicio', browse: 'Explorar', deals: 'Ofertas', cart: 'Carrito', me: 'Yo', search: 'Buscar', searchPh: 'Productos, marcas', deliverTo: 'Enviar a', flashDeals: 'Ofertas flash', seeAll: 'Ver todo →',
+      categories: 'Categorías', addToCart: 'Añadir al carrito', buyNow: 'Comprar', checkout: 'Pagar', total: 'Total', subtotal: 'Subtotal', delivery: 'Envío', free: 'Gratis', wishlist: 'Favoritos',
+      myOrders: 'Mis pedidos', language: 'Idioma', currency: 'Moneda', langCur: 'Idioma y moneda', retail: 'Minorista', wholesale: 'Mayorista', retailMode: 'Modo minorista', wholesaleMode: 'Modo mayorista', pickedForYou: 'Para ti',
+      quantity: 'Cantidad', color: 'Color', reviews: 'Reseñas', payment: 'Pago', pay: 'Pagar', orderPlaced: 'Pedido realizado', megaSale: 'MEGA REBAJAS', upTo: 'Hasta', off70: '-70%', endsIn: 'Termina en',
+      t_added: 'Añadido al carrito', discount: 'Descuento', orders: 'Pedidos', points: 'Puntos' },
+    tr: { home: 'Ana sayfa', browse: 'Kategoriler', deals: 'Fırsatlar', cart: 'Sepet', me: 'Hesabım', search: 'Ara', searchPh: 'Ürün, marka ara', deliverTo: 'Teslimat', flashDeals: 'Flaş fırsatlar', seeAll: 'Tümü →',
+      categories: 'Kategoriler', addToCart: 'Sepete ekle', buyNow: 'Hemen al', checkout: 'Ödeme', total: 'Toplam', subtotal: 'Ara toplam', delivery: 'Teslimat', free: 'Ücretsiz', wishlist: 'Favoriler',
+      myOrders: 'Siparişlerim', language: 'Dil', currency: 'Para birimi', langCur: 'Dil ve para birimi', retail: 'Perakende', wholesale: 'Toptan', retailMode: 'Perakende modu', wholesaleMode: 'Toptan modu', pickedForYou: 'Sana özel',
+      quantity: 'Adet', color: 'Renk', reviews: 'Yorumlar', payment: 'Ödeme', pay: 'Öde', orderPlaced: 'Sipariş alındı', megaSale: 'MEGA İNDİRİM', upTo: "%70'e", off70: 'varan indirim', endsIn: 'Bitişe',
+      t_added: 'Sepete eklendi', discount: 'İndirim', orders: 'Siparişler', points: 'Puan' },
+    ur: { home: 'ہوم', browse: 'زمرے', deals: 'آفرز', cart: 'ٹوکری', me: 'میں', search: 'تلاش', searchPh: 'مصنوعات، برانڈز تلاش کریں', deliverTo: 'ڈیلیوری', flashDeals: 'فلیش ڈیلز', seeAll: 'سب دیکھیں ←',
+      categories: 'زمرے', addToCart: 'ٹوکری میں ڈالیں', buyNow: 'ابھی خریدیں', checkout: 'چیک آؤٹ', total: 'کل', subtotal: 'ذیلی کل', delivery: 'ڈیلیوری', free: 'مفت', wishlist: 'پسندیدہ',
+      myOrders: 'میرے آرڈرز', language: 'زبان', currency: 'کرنسی', langCur: 'زبان اور کرنسی', retail: 'پرچون', wholesale: 'تھوک', retailMode: 'پرچون موڈ', wholesaleMode: 'تھوک موڈ', pickedForYou: 'آپ کے لیے',
+      quantity: 'مقدار', color: 'رنگ', reviews: 'جائزے', payment: 'ادائیگی', pay: 'ادا کریں', orderPlaced: 'آرڈر ہو گیا', megaSale: 'میگا سیل', upTo: 'تک', off70: '70% رعایت', endsIn: 'ختم ہونے میں',
+      t_added: 'ٹوکری میں شامل', discount: 'رعایت', orders: 'آرڈرز', points: 'پوائنٹس', back: '→', fwd: '←' },
+    hi: { home: 'होम', browse: 'श्रेणियाँ', deals: 'डील्स', cart: 'कार्ट', me: 'मैं', search: 'खोजें', searchPh: 'उत्पाद, ब्रांड खोजें', deliverTo: 'डिलीवरी', flashDeals: 'फ्लैश डील्स', seeAll: 'सभी देखें →',
+      categories: 'श्रेणियाँ', addToCart: 'कार्ट में डालें', buyNow: 'अभी खरीदें', checkout: 'चेकआउट', total: 'कुल', subtotal: 'उप-योग', delivery: 'डिलीवरी', free: 'मुफ़्त', wishlist: 'पसंदीदा',
+      myOrders: 'मेरे ऑर्डर', language: 'भाषा', currency: 'मुद्रा', langCur: 'भाषा और मुद्रा', retail: 'खुदरा', wholesale: 'थोक', retailMode: 'खुदरा मोड', wholesaleMode: 'थोक मोड', pickedForYou: 'आपके लिए',
+      quantity: 'मात्रा', color: 'रंग', reviews: 'समीक्षाएँ', payment: 'भुगतान', pay: 'भुगतान करें', orderPlaced: 'ऑर्डर हो गया', megaSale: 'मेगा सेल', upTo: '70% तक', off70: 'छूट', endsIn: 'समाप्त होने में',
+      t_added: 'कार्ट में जोड़ा गया', discount: 'छूट', orders: 'ऑर्डर', points: 'पॉइंट्स' },
+    zh: { home: '首页', browse: '分类', deals: '特惠', cart: '购物车', me: '我的', search: '搜索', searchPh: '搜索商品、品牌', deliverTo: '配送至', flashDeals: '限时秒杀', seeAll: '查看全部 →',
+      categories: '分类', addToCart: '加入购物车', buyNow: '立即购买', checkout: '结算', total: '合计', subtotal: '小计', delivery: '配送', free: '免费', wishlist: '收藏',
+      myOrders: '我的订单', language: '语言', currency: '货币', langCur: '语言和货币', retail: '零售', wholesale: '批发', retailMode: '零售模式', wholesaleMode: '批发模式', pickedForYou: '为你推荐',
+      quantity: '数量', color: '颜色', reviews: '评价', payment: '支付', pay: '支付', orderPlaced: '下单成功', megaSale: '超级大促', upTo: '低至', off70: '3折', endsIn: '距结束',
+      t_added: '已加入购物车', discount: '优惠', orders: '订单', points: '积分' }
+  };
+  state = {
+    screen: 'home', stack: [], pid: 1, mode: this.props.defaultMode ?? 'retail',
+    lang: this.props.language ?? 'ar', cur: this.props.currency ?? 'KWD',
+    cart: [{ id: 1, qty: 1, color: 'Black' }, { id: 5, qty: 2, color: '30ml' }], wish: [3, 7, 4],
+    cat: 'All', railCat: 'Electronics', query: '', sort: 'bestMatch', colorIdx: 0, qty: 1, slot: 0,
+    ship: 'standard', pay: 'knet', placed: false, coupon: false, toast: '', now: Date.now(),
+    rfq: { item: '', qty: '', price: '' }, rfqErr: '', follow: false, draft: '',
+    msgs: [{ me: false, k: 'm_hello' }]
+  };
+  componentDidMount() { this.timer = setInterval(() => this.setState({ now: Date.now() }), 1000); }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.tt); }
+  componentDidUpdate(pp) {
+    if (pp.language !== this.props.language && this.props.language) this.setState({ lang: this.props.language });
+    if (pp.currency !== this.props.currency && this.props.currency) this.setState({ cur: this.props.currency });
+  }
+  tr(k) { const L = this.D[this.state.lang] || {}; return L[k] ?? this.D.en[k] ?? k; }
+  w(x) { return this.state.lang === 'ar' ? (this.AR_WORDS[x] || x) : x; }
+  pn(p) { return this.state.lang === 'ar' ? p.ar : p.name; }
+  scrollTop() { requestAnimationFrame(() => { if (this.scrollRef.current) this.scrollRef.current.scrollTop = 0; }); }
+  go(screen, extra) { this.setState(s => ({ stack: [...s.stack, s.screen], screen, ...(extra || {}) })); this.scrollTop(); }
+  tab(screen) { this.setState({ screen, stack: [], placed: false }); this.scrollTop(); }
+  back = () => { this.setState(s => { const st = [...s.stack]; const prev = st.pop() || 'home'; return { stack: st, screen: prev, placed: false }; }); this.scrollTop(); };
+  say(k) { clearTimeout(this.tt); this.setState({ toast: k }); this.tt = setTimeout(() => this.setState({ toast: '' }), 1700); }
+  fmt(v) {
+    const c = this.CUR.find(x => x[0] === this.state.cur) || this.CUR[0];
+    const n = (v * c[3]).toLocaleString('en-US', { minimumFractionDigits: c[4], maximumFractionDigits: c[4] });
+    return this.state.lang === 'ar' ? n + ' ' + c[2] : (c[1].length > 1 && c[1] !== 'E£' ? c[1] + ' ' + n : c[1] + n);
+  }
+  tiersOf(p) { return [{ min: 10, max: 49, price: p.price * 0.72 }, { min: 50, max: 199, price: p.price * 0.64 }, { min: 200, max: null, price: p.price * 0.55 }]; }
+  unit(p, qty) {
+    if (this.state.mode !== 'wholesale') return p.price;
+    const t = this.tiersOf(p); let u = t[0].price; t.forEach(x => { if ((qty ?? 10) >= x.min) u = x.price; }); return u;
+  }
+  open(id) { const w = this.state.mode === 'wholesale'; this.go('product', { pid: id, colorIdx: 0, qty: w ? 10 : 1 }); }
+  toggleWish(id) {
+    const has = this.state.wish.includes(id);
+    this.setState(s => ({ wish: has ? s.wish.filter(x => x !== id) : [...s.wish, id] }));
+    this.say(has ? 't_unsaved' : 't_saved');
+  }
+  add(id, qty, color) {
+    this.setState(s => {
+      const c = [...s.cart]; const i = c.findIndex(x => x.id === id && x.color === color);
+      if (i >= 0) c[i] = { ...c[i], qty: c[i].qty + qty }; else c.push({ id, qty, color });
+      return { cart: c };
+    });
+  }
+  card(p) {
+    const w = this.state.mode === 'wholesale'; const on = this.state.wish.includes(p.id);
+    const u = this.unit(p, 10);
+    return {
+      ...p, name: this.pn(p), priceText: this.fmt(u) + (w ? this.tr('perPc') : ''), wasText: this.fmt(w ? p.price : p.was),
+      offText: '-' + Math.round((1 - p.price / p.was) * 100) + '%', soldPct: p.pct + '%', soldText: p.pct + '% ' + this.tr('claimed'),
+      metaText: w ? this.tr('moq') + ' · ' + p.sold + ' ' + this.tr('sold') : p.sold + ' ' + this.tr('sold'),
+      wishGlyph: on ? '♥' : '♡', wishColor: on ? '#e8452c' : '#17150f', sellerInitial: p.seller[0],
+      open: () => this.open(p.id),
+      toggleWish: e => { e && e.stopPropagation && e.stopPropagation(); this.toggleWish(p.id); },
+      quickAdd: e => { e && e.stopPropagation && e.stopPropagation(); this.add(p.id, w ? 10 : 1, p.colors[0]); this.say('t_added'); }
+    };
+  }
+  renderVals() {
+    const s = this.state; const w = s.mode === 'wholesale'; const T = k => this.tr(k);
+    const tx = { ...this.D.en, ...(this.D[s.lang] || {}) };
+    const cards = this.P.map(p => this.card(p));
+    const byId = id => cards.find(c => c.id === id);
+    const p = byId(s.pid);
+    const sec = Math.max(0, Math.floor((this.endAt - s.now) / 1000));
+    const pad = n => String(n).padStart(2, '0');
+    const cartItems = s.cart.map((c, i) => {
+      const pr = this.P.find(x => x.id === c.id); const u = this.unit(pr, c.qty);
+      return {
+        ...byId(c.id), qty: c.qty, variant: this.w(c.color) + (w ? ' · ' + this.fmt(u) + T('perPc') : ''), lineText: this.fmt(u * c.qty),
+        inc: () => this.setState(st => ({ cart: st.cart.map((x, j) => j === i ? { ...x, qty: x.qty + 1 } : x) })),
+        dec: () => this.setState(st => ({ cart: st.cart.map((x, j) => j === i ? { ...x, qty: Math.max(1, x.qty - 1) } : x) })),
+        remove: () => { this.setState(st => ({ cart: st.cart.filter((_, j) => j !== i) })); this.say('t_removed'); }, _sub: u * c.qty
+      };
+    });
+    const sub = cartItems.reduce((a, c) => a + c._sub, 0);
+    const disc = s.coupon ? Math.min(2, sub * 0.1) : 0;
+    const shipFee = s.ship === 'express' ? 1.5 : 0;
+    const count = s.cart.reduce((a, c) => a + c.qty, 0);
+    const q = s.query.trim().toLowerCase();
+    let results = cards.filter(c => { const o = this.P.find(x => x.id === c.id); return o.name.toLowerCase().includes(q) || o.ar.includes(q) || o.cat.toLowerCase().includes(q) || (this.AR_WORDS[o.cat] || '').includes(q); });
+    if (s.sort === 'priceUp') results = [...results].sort((a, b) => a.price - b.price);
+    if (s.sort === 'priceDown') results = [...results].sort((a, b) => b.price - a.price);
+    if (s.sort === 'topRated') results = [...results].sort((a, b) => b.rating - a.rating);
+    const chip = (active) => ({ bg: active ? '#17150f' : '#fff', fg: active ? '#fff' : '#17150f', border: active ? '#17150f' : '#e0dbd2' });
+    const screens = ['home', 'cats', 'deals', 'search', 'product', 'cart', 'checkout', 'orders', 'wish', 'account', 'rfq', 'chat', 'store', 'notifs', 'locale'];
+    const is = {}; screens.forEach(k => is[k] = s.screen === k);
+    const tabDefs = [['home', 'home', '50%'], ['cats', 'browse', '4px'], ['deals', 'deals', '0'], ['cart', 'cart', '6px'], ['account', 'me', '50%']];
+    const tiers = this.tiersOf(this.P.find(x => x.id === s.pid));
+    const curTier = tiers.reduce((a, t, i) => s.qty >= t.min ? i : a, 0);
+    const steps = [['s1', '01/10 · 09:12'], ['s2', '01/10 · 14:40'], ['s3', '02/10 · 08:05'], ['s4', '04/10'], ['s5', '04–06/10']];
+    const setRfq = k => e => this.setState(st => ({ rfq: { ...st.rfq, [k]: e.target.value }, rfqErr: '' }));
+    const send = () => {
+      const t = s.draft.trim(); if (!t) return;
+      this.setState(st => ({ draft: '', msgs: [...st.msgs, { me: true, text: t }] }));
+      setTimeout(() => this.setState(st => ({ msgs: [...st.msgs, { me: false, k: this.state.mode === 'wholesale' ? 'm_ws' : 'm_rt' }] })), 1100);
+    };
+    const payDefs = [['knet', 'knet', 'debit'], ['card', 'card', null], ['apple', 'applePay', 'faceId'], ['cash', 'cash', 'onDelivery']];
+    const payLabel = T(payDefs.find(x => x[0] === s.pay)[1]);
+    const curObj = this.CUR.find(x => x[0] === s.cur) || this.CUR[0];
+    const langObj = this.LANGS.find(x => x[0] === s.lang) || this.LANGS[0];
+    return {
+      scrollRef: this.scrollRef, is, tx, dir: this.RTL.includes(s.lang) ? 'rtl' : 'ltr', isWholesale: w,
+      t: { h: pad(Math.floor(sec / 3600)), m: pad(Math.floor(sec / 60) % 60), s: pad(sec % 60) },
+      localeChip: s.lang.toUpperCase() + ' · ' + s.cur,
+      jumps: [['Home', 'home'], ['Browse', 'cats'], ['Deals', 'deals'], ['Search', 'search'], ['Product', 'product'], ['Cart', 'cart'], ['Checkout', 'checkout'], ['Orders', 'orders'], ['Wishlist', 'wish'], ['Account', 'account'], ['Quote (B2B)', 'rfq'], ['Chat', 'chat'], ['Store', 'store'], ['Alerts', 'notifs'], ['Language & currency', 'locale']]
+        .map(([label, k]) => ({ label, go: () => { this.setState({ screen: k, stack: ['home'], placed: false }); this.scrollTop(); } })),
+      langs: this.LANGS.map(([code, native, en]) => ({ native, en, op: s.lang === code ? 1 : 0, bg: s.lang === code ? '#fff4f1' : '#fff', set: () => this.setState({ lang: code }) })),
+      curs: this.CUR.map(c => ({ code: c[0], sym: s.lang === 'ar' ? c[2] : c[1], name: s.lang === 'ar' ? c[6] : c[5], border: s.cur === c[0] ? '#e8452c' : '#e6e2da', set: () => this.setState({ cur: c[0] }) })),
+      modes: [['retail', 'retail', 'retailSub', 'retailMode'], ['wholesale', 'wholesale', 'wholesaleSub', 'wholesaleMode']].map(([k, l, sb, ml]) => ({
+        label: T(l), sub: T(sb), modeLabel: T(ml), bg: s.mode === k ? '#17150f' : 'transparent', fg: s.mode === k ? '#fff' : '#17150f',
+        set: () => { this.setState({ mode: k, qty: k === 'wholesale' ? 10 : 1 }); this.say(ml); }
+      })),
+      catChips: ['All', ...Object.keys(this.SUBS)].map(c => ({ label: c === 'All' ? (s.lang === 'ar' ? 'الكل' : 'All') : this.w(c), ...chip(s.cat === c), set: () => this.setState({ cat: c }) })),
+      flash: [...cards].sort((a, b) => (a.price / a.was) - (b.price / b.was)).slice(0, 6),
+      homeGrid: s.cat === 'All' ? cards : cards.filter(c => c.cat === s.cat),
+      forYouTitle: s.cat === 'All' ? (w ? T('topWholesale') : T('pickedForYou')) : this.w(s.cat),
+      railCats: Object.keys(this.SUBS).map(c => ({ label: this.w(c), bg: s.railCat === c ? '#fff' : 'transparent', border: s.railCat === c ? '#e8452c' : 'transparent', weight: s.railCat === c ? 800 : 500, set: () => this.setState({ railCat: c }) })),
+      railCat: this.w(s.railCat),
+      subs: this.SUBS[s.railCat].map(l => ({ label: this.w(l), go: () => this.go('search', { query: s.railCat }) })),
+      catTop: cards.filter(c => c.cat === s.railCat).concat(cards).slice(0, 3),
+      slots: [['now', 'onSale'], ['18:00', 'upcoming'], ['21:00', 'upcoming']].map(([time, sb], i) => ({ time: i === 0 ? T(time) : time, sub: T(sb), bg: s.slot === i ? '#17150f' : 'rgba(23,21,15,.08)', fg: s.slot === i ? '#ffd23f' : '#17150f', set: () => this.setState({ slot: i }) })),
+      dealList: s.slot === 0 ? [...cards].sort((a, b) => b.pct - a.pct) : cards.slice(s.slot * 4, s.slot * 4 + 4),
+      query: s.query, noQuery: !q, hasQuery: !!q, onQuery: e => this.setState({ query: e.target.value }),
+      recents: ['earbuds', 'hoodie', 'charger', 'yoga mat'].map(l => ({ label: l, set: () => this.setState({ query: l }) })),
+      trending: [[1, 'Smart watch', 'smart'], [3, 'Coffee set', 'coffee'], [6, 'Running shoes', 'running'], [5, 'Serum', 'serum'], [7, 'Building blocks', 'blocks']].map(([id, l, qq], i) => ({ n: i + 1, label: s.lang === 'ar' ? this.P.find(x => x.id === id).ar : l, set: () => this.setState({ query: qq }) })),
+      sorts: ['bestMatch', 'priceUp', 'priceDown', 'topRated'].map(k => ({ label: T(k), ...chip(s.sort === k), set: () => this.setState({ sort: k }) })),
+      results, resultsText: results.length + ' ' + T('results') + ' ' + T('resultsFor') + ' "' + s.query + '"',
+      p: { ...p, priceText: this.fmt(this.unit(this.P.find(x => x.id === s.pid), s.qty)) + (w ? T('perPc') : '') },
+      tiers: tiers.map((t, i) => ({ priceText: this.fmt(t.price), range: (t.max ? t.min + '–' + t.max : '≥ ' + t.min) + ' ' + T('pcs'), bg: i === curTier ? '#fff4f1' : '#fff', border: i === curTier ? '#e8452c' : '#e6e2da', set: () => this.setState({ qty: t.min }) })),
+      colors: p.colors.map((c, i) => ({ label: this.w(c), border: s.colorIdx === i ? '#17150f' : '#e0dbd2', set: () => this.setState({ colorIdx: i }) })),
+      colorName: this.w(p.colors[s.colorIdx]), qty: s.qty, qtyHint: w ? T('minOrder') : T('limit'),
+      inc: () => this.setState(st => ({ qty: st.qty + (w ? 10 : 1) })),
+      dec: () => this.setState(st => ({ qty: Math.max(w ? 10 : 1, st.qty - (w ? 10 : 1)) })),
+      addToCart: () => { this.add(s.pid, s.qty, p.colors[s.colorIdx]); this.say('t_added'); },
+      buyNow: () => { this.add(s.pid, s.qty, p.colors[s.colorIdx]); this.go('checkout', { placed: false }); },
+      toggleWishP: () => this.toggleWish(s.pid), shareToast: () => this.say('t_link'),
+      related: cards.filter(c => c.id !== s.pid).slice(0, 4),
+      storeItems: cards.filter(c => c.seller === p.seller).concat(cards.filter(c => c.seller !== p.seller)).slice(0, 6),
+      cartItems, cartCount: count, cartEmpty: !cartItems.length, cartHas: !!cartItems.length, cartCountText: count + ' ' + (count === 1 ? T('item') : T('items')),
+      sum: { sub: this.fmt(sub), disc: disc ? '−' + this.fmt(disc) : this.fmt(0), total: this.fmt(sub - disc), ship: shipFee ? this.fmt(shipFee) : T('free'), grand: this.fmt(sub - disc + shipFee) },
+      couponLabel: s.coupon ? T('couponApplied') : T('addCoupon'), couponAction: s.coupon ? T('remove') : T('apply'),
+      applyCoupon: () => { this.setState({ coupon: !s.coupon }); this.say(s.coupon ? 't_couponOff' : 't_couponOn'); },
+      shipOpts: [['standard', 'standard', 'arrives', T('free')], ['express', 'express', 'expressSub', this.fmt(1.5)]].map(([k, l, sb, price]) => ({ label: T(l), sub: T(sb), price, border: s.ship === k ? '#17150f' : '#e6e2da', dot: s.ship === k ? '#e8452c' : '#fff', set: () => this.setState({ ship: k }) })),
+      payOpts: payDefs.map(([k, l, sb]) => ({ label: T(l), sub: sb ? T(sb) : 'Visa · Mastercard', border: s.pay === k ? '#e8452c' : '#e6e2da', set: () => this.setState({ pay: k }) })),
+      pay: payLabel, payLabel, placed: s.placed, notPlaced: !s.placed,
+      placeOrder: () => { if (!s.cart.length) { this.say('t_empty'); return; } this.setState({ placed: true, cart: [], coupon: false }); this.scrollTop(); },
+      track: steps.map(([k, when], i) => ({ label: T(k), when, dot: i <= 2 ? '#e8452c' : 'transparent', ring: i <= 2 ? '#e8452c' : '#5a564d', line: i < 2 ? '#e8452c' : (i === 4 ? 'transparent' : '#3a372f'), op: i <= 2 ? 1 : 0.5 })),
+      reorder: () => { this.add(8, 1, 'White'); this.say('t_added'); },
+      wishItems: s.wish.map(byId), wishEmpty: !s.wish.length, wishCount: s.wish.length,
+      menu: [['myOrders', '', 'orders'], ['wishlist', s.wish.length, 'wish'], ['rfq', 'B2B', 'rfq'], ['messages', '1', 'chat'], ['langCur', langObj[1] + ' · ' + curObj[0], 'locale'], ['addresses', T('city'), null], ['payMethods', T('knet'), null], ['help', '', null]]
+        .map(([k, value, sc]) => ({ label: T(k), value, go: () => sc ? this.go(sc) : this.say(T(k) + ' · ' + T('soon')) })),
+      couponToast: () => this.say('t_points'),
+      rfq: {
+        ...s.rfq, error: s.rfqErr ? T(s.rfqErr) : '', onItem: setRfq('item'), onQty: setRfq('qty'), onPrice: setRfq('price'),
+        submit: () => {
+          if (!s.rfq.item.trim()) return this.setState({ rfqErr: 'e_item' });
+          if (!(+s.rfq.qty >= 10)) return this.setState({ rfqErr: 'e_qty' });
+          this.setState({ rfq: { item: '', qty: '', price: '' } }); this.say('t_quote'); this.back();
+        }
+      },
+      msgs: s.msgs.map(m => ({ text: m.k ? T(m.k) : m.text, align: m.me ? 'flex-end' : 'flex-start', bg: m.me ? '#17150f' : '#fff', fg: m.me ? '#fff' : '#17150f' })),
+      draft: s.draft, onDraft: e => this.setState({ draft: e.target.value }), onDraftKey: e => { if (e.key === 'Enter') send(); }, sendMsg: send,
+      follow: { label: s.follow ? T('following') : T('followStore'), bg: s.follow ? '#fff' : '#17150f', fg: s.follow ? '#17150f' : '#fff', border: s.follow ? '1px solid #17150f' : 'none' },
+      followToggle: () => this.setState({ follow: !s.follow }),
+      showTabs: ['home', 'cats', 'deals', 'cart', 'account'].includes(s.screen),
+      tabs: tabDefs.map(([k, l, radius]) => {
+        const a = s.screen === k;
+        return { label: T(l), radius, fg: a ? '#17150f' : '#9a948a', mark: a ? '#e8452c' : 'transparent', weight: a ? 800 : 500, badge: k === 'cart' ? count : '', badgeOp: k === 'cart' && count ? 1 : 0, go: () => this.tab(k) };
+      }),
+      goHome: () => this.tab('home'), goSearch: () => this.go('search'), goDeals: () => this.go('deals'), goCart: () => this.go('cart'),
+      goCheckout: () => this.go('checkout', { placed: false }), goOrders: () => this.go('orders'), goWish: () => this.go('wish'),
+      goRfq: () => this.go('rfq'), goChat: () => this.go('chat'), goStore: () => this.go('store'), goNotifs: () => this.go('notifs'), goLocale: () => this.go('locale'),
+      back: this.back, toast: s.toast ? (this.D.en[s.toast] ? T(s.toast) : s.toast) : '', hasToast: !!s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
