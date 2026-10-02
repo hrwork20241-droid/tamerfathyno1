@@ -9,18 +9,21 @@ import { Locale } from './screens/Locale';
 import { Product, ProductBar } from './screens/Product';
 import { Search } from './screens/Search';
 import { Chat, Rfq, Store } from './screens/Seller';
+import { Addresses, Help, Payments } from './screens/Support';
 import { TAB_SCREENS, useStore, type Screen } from './store';
 import { C, f, MONO } from './ui';
 
 const SCREENS: Record<Screen, () => ReactNode> = {
   home: Home, cats: Browse, deals: Deals, search: Search, product: Product, cart: Cart, checkout: Checkout,
   orders: Orders, wish: Wishlist, account: Account, rfq: Rfq, chat: Chat, store: Store, notifs: Notifications, locale: Locale,
+  addresses: Addresses, payments: Payments, help: Help,
 };
 
 const JUMPS: [string, Screen][] = [
   ['Home', 'home'], ['Browse', 'cats'], ['Deals', 'deals'], ['Search', 'search'], ['Product', 'product'], ['Cart', 'cart'],
   ['Checkout', 'checkout'], ['Orders', 'orders'], ['Wishlist', 'wish'], ['Account', 'account'], ['Quote (B2B)', 'rfq'],
   ['Chat', 'chat'], ['Store', 'store'], ['Alerts', 'notifs'], ['Language & currency', 'locale'],
+  ['Addresses', 'addresses'], ['Payment methods', 'payments'], ['Help', 'help'],
 ];
 
 // [screen, label, icon corner radius]: each tab icon is a distinct shape.

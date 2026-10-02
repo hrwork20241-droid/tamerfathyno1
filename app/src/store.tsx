@@ -1,10 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { P, type Category, type Product } from './data/products';
-import { CUR, CURRENCY_CODES, D, LANG_CODES, PRODUCT_NAMES, RTL, WORDS, type Lang, type TKey } from './data/locale';
+import { CUR, CURRENCY_CODES, LANG_CODES, STRINGS, PRODUCT_NAMES, RTL, WORDS, type Lang, type TKey } from './data/locale';
 
 export type Screen =
   | 'home' | 'cats' | 'deals' | 'search' | 'product' | 'cart' | 'checkout' | 'orders'
-  | 'wish' | 'account' | 'rfq' | 'chat' | 'store' | 'notifs' | 'locale';
+  | 'wish' | 'account' | 'rfq' | 'chat' | 'store' | 'notifs' | 'locale'
+  | 'addresses' | 'payments' | 'help';
 export type Mode = 'retail' | 'wholesale';
 export type SortKey = 'bestMatch' | 'priceUp' | 'priceDown' | 'topRated';
 export type PayKey = 'knet' | 'card' | 'apple' | 'cash';
@@ -14,6 +15,25 @@ export const TAB_SCREENS: Screen[] = ['home', 'cats', 'deals', 'cart', 'account'
 
 interface CartLine { id: number; qty: number; color: string }
 interface Msg { me: boolean; k?: TKey; text?: string }
+
+export type AddrLabel = 'addrHome' | 'addrWork';
+/** A saved delivery address. Seeded addresses carry a dictionary key so they translate. */
+export interface Address {
+  id: number;
+  label: AddrLabel;
+  seed?: 'address' | 'workAddress';
+  area: string;
+  block: string;
+  street: string;
+  house: string;
+  phone: string;
+}
+
+const SEED_ADDRESSES: Address[] = [
+  { id: 1, label: 'addrHome', seed: 'address', area: '', block: '', street: '', house: '', phone: '+965 5555 1234' },
+  { id: 2, label: 'addrWork', seed: 'workAddress', area: '', block: '', street: '', house: '', phone: '+965 2222 7788' },
+];
+const PAY_KEYS: PayKey[] = ['knet', 'card', 'apple', 'cash'];
 
 export interface State {
   screen: Screen;
@@ -42,6 +62,8 @@ export interface State {
   follow: boolean;
   draft: string;
   msgs: Msg[];
+  addresses: Address[];
+  addrId: number;
 }
 
 /** A product prepared for display in the current language, currency and mode. */
@@ -58,7 +80,7 @@ export interface CardView extends Product {
 }
 
 const STORAGE_KEY = 'no1:v1';
-type Saved = Pick<State, 'lang' | 'cur' | 'mode' | 'cart' | 'wish' | 'follow' | 'coupon'>;
+type Saved = Pick<State, 'lang' | 'cur' | 'mode' | 'cart' | 'wish' | 'follow' | 'coupon' | 'addresses' | 'addrId' | 'pay'>;
 
 /** Shopper data kept across reloads. Anything invalid or unreadable is ignored. */
 function loadSaved(): Partial<Saved> {
@@ -75,6 +97,16 @@ function loadSaved(): Partial<Saved> {
     if (Array.isArray(raw.wish)) out.wish = [...new Set<number>(raw.wish)].filter(id => P.some(p => p.id === id));
     if (typeof raw.follow === 'boolean') out.follow = raw.follow;
     if (typeof raw.coupon === 'boolean') out.coupon = raw.coupon;
+    if (PAY_KEYS.includes(raw.pay)) out.pay = raw.pay;
+    if (Array.isArray(raw.addresses)) {
+      const list = raw.addresses.filter((a: Address) =>
+        Number.isInteger(a?.id) && (a.label === 'addrHome' || a.label === 'addrWork')
+        && ['area', 'block', 'street', 'house', 'phone'].every(k => typeof a[k as keyof Address] === 'string'));
+      if (list.length) {
+        out.addresses = list;
+        out.addrId = list.some((a: Address) => a.id === raw.addrId) ? raw.addrId : list[0].id;
+      }
+    }
     return out;
   } catch {
     return {};
@@ -82,7 +114,10 @@ function loadSaved(): Partial<Saved> {
 }
 
 function save(s: State) {
-  const data: Saved = { lang: s.lang, cur: s.cur, mode: s.mode, cart: s.cart, wish: s.wish, follow: s.follow, coupon: s.coupon };
+  const data: Saved = {
+    lang: s.lang, cur: s.cur, mode: s.mode, cart: s.cart, wish: s.wish, follow: s.follow, coupon: s.coupon,
+    addresses: s.addresses, addrId: s.addrId, pay: s.pay,
+  };
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* storage unavailable: keep in memory only */ }
 }
 
@@ -101,9 +136,10 @@ function initialState(): State {
     screen: 'home', stack: [], pid: 1, mode, lang, cur,
     cart: saved.cart ?? [{ id: 1, qty: 1, color: 'Black' }, { id: 5, qty: 2, color: '30ml' }], wish: saved.wish ?? [3, 7, 4],
     cat: 'All', railCat: 'Electronics', query: '', sort: 'bestMatch', colorIdx: 0, qty: mode === 'wholesale' ? 10 : 1, slot: 0,
-    ship: 'standard', pay: 'knet', placed: false, coupon: saved.coupon ?? false, toast: '',
+    ship: 'standard', pay: saved.pay ?? 'knet', placed: false, coupon: saved.coupon ?? false, toast: '',
     rfq: { item: '', qty: '', price: '' }, rfqErr: '', follow: saved.follow ?? false, draft: '',
     msgs: [{ me: false, k: 'm_hello' }],
+    addresses: saved.addresses ?? SEED_ADDRESSES, addrId: saved.addrId ?? 1,
   };
 }
 
@@ -128,7 +164,7 @@ function useStoreValue() {
   useEffect(() => {
     document.documentElement.lang = s.lang;
   }, [s.lang]);
-  useEffect(() => save(s), [s.lang, s.cur, s.mode, s.cart, s.wish, s.follow, s.coupon]);
+  useEffect(() => save(s), [s.lang, s.cur, s.mode, s.cart, s.wish, s.follow, s.coupon, s.addresses, s.addrId, s.pay]);
 
   const scrollTop = () => requestAnimationFrame(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
@@ -157,7 +193,7 @@ function useStoreValue() {
   };
 
   const w = s.mode === 'wholesale';
-  const t = (k: TKey): string => D[s.lang][k] ?? D.en[k] ?? k;
+  const t = (k: TKey): string => STRINGS[s.lang][k] ?? STRINGS.en[k] ?? k;
   /** Localise a category, subcategory or variant word. */
   const word = (x: string) => WORDS[s.lang][x] ?? x;
   const productName = (id: number) => PRODUCT_NAMES[s.lang][id] ?? productById(id).name;
@@ -225,15 +261,19 @@ function useStoreValue() {
     setTimeout(() => set(p => ({ msgs: [...p.msgs, { me: false, k: p.mode === 'wholesale' ? 'm_ws' : 'm_rt' }] })), 1100);
   };
 
+  const addrText = (a: Address) => (a.seed ? t(a.seed)
+    : t('addrFmt').replace('{b}', a.block).replace('{s}', a.street).replace('{h}', a.house).replace('{a}', a.area));
+  const address = s.addresses.find(a => a.id === s.addrId) ?? s.addresses[0];
+
   const cartCount = s.cart.reduce((a, c) => a + c.qty, 0);
-  const toastText = s.toast ? (s.toast in D.en ? t(s.toast as TKey) : s.toast) : '';
+  const toastText = s.toast ? (s.toast in STRINGS.en ? t(s.toast as TKey) : s.toast) : '';
 
   return {
     s, set, scrollRef: scrollRef as RefObject<HTMLDivElement>,
     isWholesale: w, dir: RTL.includes(s.lang) ? 'rtl' as const : 'ltr' as const,
     t, word, productName, fmt, unit, card, cards, byId: (id: number) => cards.find(c => c.id === id)!,
     go, tab, back, jump, say, open, toggleWish, add, quickAdd, setMode, sendMsg,
-    cartCount, toastText,
+    cartCount, toastText, addrText, address,
   };
 }
 

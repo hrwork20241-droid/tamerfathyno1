@@ -107,7 +107,7 @@ export function Cart() {
 }
 
 export function Checkout() {
-  const { s, t, fmt, go, tab, say, set, scrollRef } = useStore();
+  const { s, t, fmt, go, tab, say, set, scrollRef, address, addrText } = useStore();
   const { countText, sum } = useCart();
   const payLabel = t(PAY_DEFS.find(x => x[0] === s.pay)![1]);
 
@@ -144,9 +144,9 @@ export function Checkout() {
       <div style={{ background: '#fff', borderRadius: 16, padding: 14, display: 'flex', flexDirection: 'column', gap: 4 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', font: f(800, 14) }}>
           <span>{t('deliverTo')}</span>
-          <span style={{ color: C.accent, fontWeight: 600, fontSize: 13 }}>{t('change')}</span>
+          <button onClick={() => go('addresses')} style={{ border: 'none', background: 'none', padding: 0, color: C.accent, font: f(600, 13) }}>{t('change')}</button>
         </div>
-        <div style={{ font: f(500, 13, 1.45), color: C.body }}>{t('name')} · <span dir="ltr">+965 5555 1234</span><br />{t('address')}</div>
+        <div style={{ font: f(500, 13, 1.45), color: C.body }}>{t('name')} · <span dir="ltr">{address.phone}</span><br />{addrText(address)}</div>
       </div>
 
       <div style={{ font: f(800, 14) }}>{t('delivery')}</div>

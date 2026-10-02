@@ -1,4 +1,5 @@
 import { AR_WORDS, P } from './products';
+import { ACCOUNT, type AccountDict } from './lang/account';
 import { es } from './lang/es';
 import { fr } from './lang/fr';
 import { hi } from './lang/hi';
@@ -64,7 +65,7 @@ const EN = { deliverTo: 'Deliver to', city: 'Salmiya', searchPh: 'Search product
   m_ws: 'For 50+ pcs I can do the tier-2 price and ship in 3 days.', m_rt: 'Yes, it is in stock and ships today from Kuwait.' };
 
 export type Dict = typeof EN;
-export type TKey = keyof Dict;
+export type TKey = keyof Dict | keyof AccountDict;
 
 export const D: Record<Lang, Partial<Dict>> = {
   en: EN,
@@ -114,3 +115,8 @@ export const PRODUCT_NAMES: Record<Lang, Record<number, string>> = {
   ar: Object.fromEntries(P.map(p => [p.id, p.ar])),
   fr: fr.products, es: es.products, tr: tr.products, ur: ur.products, hi: hi.products, zh: zh.products,
 };
+
+/** Every UI string per language: the main dictionary plus the account screens. */
+export const STRINGS = Object.fromEntries(
+  LANG_CODES.map(l => [l, { ...D[l], ...ACCOUNT[l] }]),
+) as Record<Lang, Partial<Record<TKey, string>>>;
