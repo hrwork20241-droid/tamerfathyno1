@@ -25,10 +25,10 @@ You can set the starting language, currency and mode with URL parameters. These 
 ## Layout
 
 - `src/store.tsx`: app state, navigation stack, price, currency and tier logic, and the toast
-- `src/data/`: products, categories, languages, currencies and all UI strings
+- `src/data/`: products, categories, languages, currencies and UI strings (`lang/` has one pack per extra language)
 - `src/ui.tsx`: design tokens and shared pieces (image placeholder, back header, mode switch)
 - `src/screens/`: one component per screen (15 in total)
 
 Prices are stored in KWD and converted at the indicative rates in `data/locale.ts`.
 Product images are striped placeholders, as in the design.
-French, Spanish, Turkish, Urdu, Hindi and Chinese cover only the core strings, as in the design. Missing strings fall back to English.
+All 8 languages are complete: every UI string, plus category, colour and product names. English and Arabic live in `data/locale.ts` and the other six in `data/lang/*.ts`. TypeScript rejects a language pack that is missing a string. For languages other than English and Arabic, currency names come from the browser's `Intl.DisplayNames`.

@@ -5,6 +5,9 @@ import { BackHeader, C, f, mono, screenPad } from '../ui';
 export function Locale() {
   const { s, t, set } = useStore();
   const ar = s.lang === 'ar';
+  // Currency names come from the browser's Intl data for languages beyond English and Arabic.
+  const names = ar || s.lang === 'en' ? null : new Intl.DisplayNames([s.lang], { type: 'currency' });
+  const curName = (c: (typeof CUR)[number]) => (ar ? c[6] : names?.of(c[0]) ?? c[5]);
 
   return (
     <div style={screenPad}>
@@ -48,7 +51,7 @@ export function Locale() {
                 <b style={{ font: mono(800, 14) }}>{c[0]}</b>
                 <span style={{ font: f(700, 13), color: C.accent }}>{ar ? c[2] : c[1]}</span>
               </span>
-              <span style={{ font: f(500, 11), color: C.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{ar ? c[6] : c[5]}</span>
+              <span style={{ font: f(500, 11), color: C.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{curName(c)}</span>
             </button>
           );
         })}

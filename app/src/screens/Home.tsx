@@ -54,7 +54,7 @@ export function Home() {
             onClick={() => set({ cat: c })}
             style={{ flex: 'none', height: 34, padding: '0 14px', borderRadius: 999, border: '1px solid', ...chip(s.cat === c), font: f(600, 13) }}
           >
-            {c === 'All' ? (s.lang === 'ar' ? 'الكل' : 'All') : word(c)}
+            {word(c)}
           </button>
         ))}
       </div>

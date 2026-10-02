@@ -1,5 +1,4 @@
-import { AR_WORDS } from '../data/products';
-import { productById, useStore, type SortKey } from '../store';
+import { useStore, type SortKey } from '../store';
 import { BackButton, C, chip, f, mono, Ph } from '../ui';
 
 const RECENTS = ['earbuds', 'hoodie', 'charger', 'yoga mat'];
@@ -9,11 +8,11 @@ const TRENDING: [id: number, label: string, query: string][] = [
 const SORTS: SortKey[] = ['bestMatch', 'priceUp', 'priceDown', 'topRated'];
 
 export function Search() {
-  const { s, t, cards, open, set } = useStore();
+  const { s, t, word, productName, cards, open, set } = useStore();
   const q = s.query.trim().toLowerCase();
 
   let results = cards.filter(c =>
-    c.name.toLowerCase().includes(q) || c.ar.includes(q) || c.cat.toLowerCase().includes(q) || (AR_WORDS[c.cat] ?? '').includes(q));
+    [c.name, c.ar, c.title, c.cat, word(c.cat)].some(x => x.toLowerCase().includes(q)));
   if (s.sort === 'priceUp') results = [...results].sort((a, b) => a.price - b.price);
   if (s.sort === 'priceDown') results = [...results].sort((a, b) => b.price - a.price);
   if (s.sort === 'topRated') results = [...results].sort((a, b) => b.rating - a.rating);
@@ -49,7 +48,7 @@ export function Search() {
                 style={{ border: 'none', borderBottom: `1px solid ${C.line}`, background: 'none', height: 46, display: 'flex', alignItems: 'center', gap: 12, textAlign: 'start', font: f(500, 14), color: C.ink, padding: 0 }}
               >
                 <span style={{ font: mono(700, 12), color: C.accent, width: 18 }}>{i + 1}</span>
-                {s.lang === 'ar' ? productById(id).ar : label}
+                {s.lang === 'en' ? label : productName(id)}
               </button>
             ))}
           </div>

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
-import { AR_WORDS, P, type Category, type Product } from './data/products';
-import { CUR, CURRENCY_CODES, D, LANG_CODES, RTL, type Lang, type TKey } from './data/locale';
+import { P, type Category, type Product } from './data/products';
+import { CUR, CURRENCY_CODES, D, LANG_CODES, PRODUCT_NAMES, RTL, WORDS, type Lang, type TKey } from './data/locale';
 
 export type Screen =
   | 'home' | 'cats' | 'deals' | 'search' | 'product' | 'cart' | 'checkout' | 'orders'
@@ -123,8 +123,9 @@ function useStoreValue() {
 
   const w = s.mode === 'wholesale';
   const t = (k: TKey): string => D[s.lang][k] ?? D.en[k] ?? k;
-  /** Localise a category, subcategory or variant word (Arabic only). */
-  const word = (x: string) => (s.lang === 'ar' ? AR_WORDS[x] ?? x : x);
+  /** Localise a category, subcategory or variant word. */
+  const word = (x: string) => WORDS[s.lang][x] ?? x;
+  const productName = (id: number) => PRODUCT_NAMES[s.lang][id] ?? productById(id).name;
   const fmt = (kwd: number) => {
     const c = CUR.find(x => x[0] === s.cur) ?? CUR[0];
     const n = (kwd * c[3]).toLocaleString('en-US', { minimumFractionDigits: c[4], maximumFractionDigits: c[4] });
@@ -144,7 +145,7 @@ function useStoreValue() {
     const wished = s.wish.includes(p.id);
     return {
       ...p,
-      title: s.lang === 'ar' ? p.ar : p.name,
+      title: productName(p.id),
       priceText: fmt(unit(p, 10)) + (w ? t('perPc') : ''),
       wasText: fmt(w ? p.price : p.was),
       offText: '-' + Math.round((1 - p.price / p.was) * 100) + '%',
@@ -195,7 +196,7 @@ function useStoreValue() {
   return {
     s, set, scrollRef: scrollRef as RefObject<HTMLDivElement>,
     isWholesale: w, dir: RTL.includes(s.lang) ? 'rtl' as const : 'ltr' as const,
-    t, word, fmt, unit, card, cards, byId: (id: number) => cards.find(c => c.id === id)!,
+    t, word, productName, fmt, unit, card, cards, byId: (id: number) => cards.find(c => c.id === id)!,
     go, tab, back, jump, say, open, toggleWish, add, quickAdd, setMode, sendMsg,
     cartCount, toastText,
   };

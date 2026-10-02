@@ -1,3 +1,11 @@
+import { AR_WORDS, P } from './products';
+import { es } from './lang/es';
+import { fr } from './lang/fr';
+import { hi } from './lang/hi';
+import { tr } from './lang/tr';
+import { ur } from './lang/ur';
+import { zh } from './lang/zh';
+
 export type Lang = 'en' | 'ar' | 'fr' | 'es' | 'tr' | 'ur' | 'hi' | 'zh';
 export const LANG_CODES: Lang[] = ['ar', 'en', 'fr', 'es', 'tr', 'ur', 'hi', 'zh'];
 
@@ -85,34 +93,24 @@ export const D: Record<Lang, Partial<Dict>> = {
     t_link: 'تم نسخ الرابط', t_couponOn: 'تم تطبيق الكوبون', t_couponOff: 'تمت إزالة الكوبون', t_empty: 'سلتك فارغة', t_quote: 'تم إرسال طلب عرض السعر', t_points: '2,450 نقطة جاهزة للاستبدال',
     e_item: 'أضف المنتج الذي تحتاجه.', e_qty: 'يجب ألا تقل الكمية عن 10.', m_hello: 'أهلاً! شكراً لزيارتك. اسألني عن المقاسات أو أسعار الجملة أو الشحن.',
     m_ws: 'لطلب 50 قطعة أو أكثر أقدر أعطيك سعر الشريحة الثانية والشحن خلال 3 أيام.', m_rt: 'نعم، المنتج متوفر ويُشحن اليوم من الكويت.' },
-  fr: { home: 'Accueil', browse: 'Rayons', deals: 'Promos', cart: 'Panier', me: 'Moi', search: 'Rechercher', searchPh: 'Produits, marques', deliverTo: 'Livrer à', flashDeals: 'Ventes flash', seeAll: 'Tout voir →',
-    categories: 'Catégories', addToCart: 'Ajouter au panier', buyNow: 'Acheter', checkout: 'Paiement', total: 'Total', subtotal: 'Sous-total', delivery: 'Livraison', free: 'Gratuit', wishlist: 'Favoris',
-    myOrders: 'Mes commandes', language: 'Langue', currency: 'Devise', langCur: 'Langue et devise', retail: 'Détail', wholesale: 'Gros', retailMode: 'Mode détail', wholesaleMode: 'Mode gros', pickedForYou: 'Pour vous',
-    quantity: 'Quantité', color: 'Couleur', reviews: 'Avis', payment: 'Paiement', pay: 'Payer', orderPlaced: 'Commande passée', megaSale: 'MÉGA SOLDES', upTo: "Jusqu'à", off70: '-70%', endsIn: 'Fin dans',
-    t_added: 'Ajouté au panier', discount: 'Remise', orders: 'Commandes', points: 'Points' },
-  es: { home: 'Inicio', browse: 'Explorar', deals: 'Ofertas', cart: 'Carrito', me: 'Yo', search: 'Buscar', searchPh: 'Productos, marcas', deliverTo: 'Enviar a', flashDeals: 'Ofertas flash', seeAll: 'Ver todo →',
-    categories: 'Categorías', addToCart: 'Añadir al carrito', buyNow: 'Comprar', checkout: 'Pagar', total: 'Total', subtotal: 'Subtotal', delivery: 'Envío', free: 'Gratis', wishlist: 'Favoritos',
-    myOrders: 'Mis pedidos', language: 'Idioma', currency: 'Moneda', langCur: 'Idioma y moneda', retail: 'Minorista', wholesale: 'Mayorista', retailMode: 'Modo minorista', wholesaleMode: 'Modo mayorista', pickedForYou: 'Para ti',
-    quantity: 'Cantidad', color: 'Color', reviews: 'Reseñas', payment: 'Pago', pay: 'Pagar', orderPlaced: 'Pedido realizado', megaSale: 'MEGA REBAJAS', upTo: 'Hasta', off70: '-70%', endsIn: 'Termina en',
-    t_added: 'Añadido al carrito', discount: 'Descuento', orders: 'Pedidos', points: 'Puntos' },
-  tr: { home: 'Ana sayfa', browse: 'Kategoriler', deals: 'Fırsatlar', cart: 'Sepet', me: 'Hesabım', search: 'Ara', searchPh: 'Ürün, marka ara', deliverTo: 'Teslimat', flashDeals: 'Flaş fırsatlar', seeAll: 'Tümü →',
-    categories: 'Kategoriler', addToCart: 'Sepete ekle', buyNow: 'Hemen al', checkout: 'Ödeme', total: 'Toplam', subtotal: 'Ara toplam', delivery: 'Teslimat', free: 'Ücretsiz', wishlist: 'Favoriler',
-    myOrders: 'Siparişlerim', language: 'Dil', currency: 'Para birimi', langCur: 'Dil ve para birimi', retail: 'Perakende', wholesale: 'Toptan', retailMode: 'Perakende modu', wholesaleMode: 'Toptan modu', pickedForYou: 'Sana özel',
-    quantity: 'Adet', color: 'Renk', reviews: 'Yorumlar', payment: 'Ödeme', pay: 'Öde', orderPlaced: 'Sipariş alındı', megaSale: 'MEGA İNDİRİM', upTo: "%70'e", off70: 'varan indirim', endsIn: 'Bitişe',
-    t_added: 'Sepete eklendi', discount: 'İndirim', orders: 'Siparişler', points: 'Puan' },
-  ur: { home: 'ہوم', browse: 'زمرے', deals: 'آفرز', cart: 'ٹوکری', me: 'میں', search: 'تلاش', searchPh: 'مصنوعات، برانڈز تلاش کریں', deliverTo: 'ڈیلیوری', flashDeals: 'فلیش ڈیلز', seeAll: 'سب دیکھیں ←',
-    categories: 'زمرے', addToCart: 'ٹوکری میں ڈالیں', buyNow: 'ابھی خریدیں', checkout: 'چیک آؤٹ', total: 'کل', subtotal: 'ذیلی کل', delivery: 'ڈیلیوری', free: 'مفت', wishlist: 'پسندیدہ',
-    myOrders: 'میرے آرڈرز', language: 'زبان', currency: 'کرنسی', langCur: 'زبان اور کرنسی', retail: 'پرچون', wholesale: 'تھوک', retailMode: 'پرچون موڈ', wholesaleMode: 'تھوک موڈ', pickedForYou: 'آپ کے لیے',
-    quantity: 'مقدار', color: 'رنگ', reviews: 'جائزے', payment: 'ادائیگی', pay: 'ادا کریں', orderPlaced: 'آرڈر ہو گیا', megaSale: 'میگا سیل', upTo: 'تک', off70: '70% رعایت', endsIn: 'ختم ہونے میں',
-    t_added: 'ٹوکری میں شامل', discount: 'رعایت', orders: 'آرڈرز', points: 'پوائنٹس', back: '→', fwd: '←' },
-  hi: { home: 'होम', browse: 'श्रेणियाँ', deals: 'डील्स', cart: 'कार्ट', me: 'मैं', search: 'खोजें', searchPh: 'उत्पाद, ब्रांड खोजें', deliverTo: 'डिलीवरी', flashDeals: 'फ्लैश डील्स', seeAll: 'सभी देखें →',
-    categories: 'श्रेणियाँ', addToCart: 'कार्ट में डालें', buyNow: 'अभी खरीदें', checkout: 'चेकआउट', total: 'कुल', subtotal: 'उप-योग', delivery: 'डिलीवरी', free: 'मुफ़्त', wishlist: 'पसंदीदा',
-    myOrders: 'मेरे ऑर्डर', language: 'भाषा', currency: 'मुद्रा', langCur: 'भाषा और मुद्रा', retail: 'खुदरा', wholesale: 'थोक', retailMode: 'खुदरा मोड', wholesaleMode: 'थोक मोड', pickedForYou: 'आपके लिए',
-    quantity: 'मात्रा', color: 'रंग', reviews: 'समीक्षाएँ', payment: 'भुगतान', pay: 'भुगतान करें', orderPlaced: 'ऑर्डर हो गया', megaSale: 'मेगा सेल', upTo: '70% तक', off70: 'छूट', endsIn: 'समाप्त होने में',
-    t_added: 'कार्ट में जोड़ा गया', discount: 'छूट', orders: 'ऑर्डर', points: 'पॉइंट्स' },
-  zh: { home: '首页', browse: '分类', deals: '特惠', cart: '购物车', me: '我的', search: '搜索', searchPh: '搜索商品、品牌', deliverTo: '配送至', flashDeals: '限时秒杀', seeAll: '查看全部 →',
-    categories: '分类', addToCart: '加入购物车', buyNow: '立即购买', checkout: '结算', total: '合计', subtotal: '小计', delivery: '配送', free: '免费', wishlist: '收藏',
-    myOrders: '我的订单', language: '语言', currency: '货币', langCur: '语言和货币', retail: '零售', wholesale: '批发', retailMode: '零售模式', wholesaleMode: '批发模式', pickedForYou: '为你推荐',
-    quantity: '数量', color: '颜色', reviews: '评价', payment: '支付', pay: '支付', orderPlaced: '下单成功', megaSale: '超级大促', upTo: '低至', off70: '3折', endsIn: '距结束',
-    t_added: '已加入购物车', discount: '优惠', orders: '订单', points: '积分' }
+  fr: fr.dict, es: es.dict, tr: tr.dict, ur: ur.dict, hi: hi.dict, zh: zh.dict,
+};
+
+/** A full translation: UI strings, category/variant words and product names. */
+export interface LangPack {
+  dict: Dict;
+  words: Record<string, string>;
+  products: Record<number, string>;
+}
+
+/** Category, subcategory and variant labels per language (English is the key itself). */
+export const WORDS: Record<Lang, Record<string, string>> = {
+  en: {}, ar: AR_WORDS, fr: fr.words, es: es.words, tr: tr.words, ur: ur.words, hi: hi.words, zh: zh.words,
+};
+
+/** Product names per language. */
+export const PRODUCT_NAMES: Record<Lang, Record<number, string>> = {
+  en: Object.fromEntries(P.map(p => [p.id, p.name])),
+  ar: Object.fromEntries(P.map(p => [p.id, p.ar])),
+  fr: fr.products, es: es.products, tr: tr.products, ur: ur.products, hi: hi.products, zh: zh.products,
 };
