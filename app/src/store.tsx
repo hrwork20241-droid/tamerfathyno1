@@ -57,18 +57,52 @@ export interface CardView extends Product {
   sellerInitial: string;
 }
 
-/** Initial language, currency and mode can be set with ?lang=en&currency=EGP&mode=wholesale. */
+const STORAGE_KEY = 'no1:v1';
+type Saved = Pick<State, 'lang' | 'cur' | 'mode' | 'cart' | 'wish' | 'follow' | 'coupon'>;
+
+/** Shopper data kept across reloads. Anything invalid or unreadable is ignored. */
+function loadSaved(): Partial<Saved> {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
+    const out: Partial<Saved> = {};
+    if (LANG_CODES.includes(raw.lang)) out.lang = raw.lang;
+    if (CURRENCY_CODES.includes(raw.cur)) out.cur = raw.cur;
+    if (raw.mode === 'retail' || raw.mode === 'wholesale') out.mode = raw.mode;
+    if (Array.isArray(raw.cart)) {
+      out.cart = raw.cart.filter((c: CartLine) =>
+        P.some(p => p.id === c?.id && p.colors.includes(c.color)) && Number.isInteger(c.qty) && c.qty > 0);
+    }
+    if (Array.isArray(raw.wish)) out.wish = [...new Set<number>(raw.wish)].filter(id => P.some(p => p.id === id));
+    if (typeof raw.follow === 'boolean') out.follow = raw.follow;
+    if (typeof raw.coupon === 'boolean') out.coupon = raw.coupon;
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+function save(s: State) {
+  const data: Saved = { lang: s.lang, cur: s.cur, mode: s.mode, cart: s.cart, wish: s.wish, follow: s.follow, coupon: s.coupon };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* storage unavailable: keep in memory only */ }
+}
+
+/**
+ * Starting state: the saved session, then URL overrides
+ * (?lang=en&currency=EGP&mode=wholesale), then the design defaults.
+ */
 function initialState(): State {
   const q = new URLSearchParams(window.location.search);
-  const lang = LANG_CODES.find(l => l === q.get('lang')) ?? 'ar';
-  const cur = CURRENCY_CODES.find(c => c === q.get('currency')?.toUpperCase()) ?? 'KWD';
-  const mode: Mode = q.get('mode') === 'wholesale' ? 'wholesale' : 'retail';
+  const saved = loadSaved();
+  const lang = LANG_CODES.find(l => l === q.get('lang')) ?? saved.lang ?? 'ar';
+  const cur = CURRENCY_CODES.find(c => c === q.get('currency')?.toUpperCase()) ?? saved.cur ?? 'KWD';
+  const qm = q.get('mode');
+  const mode: Mode = qm === 'wholesale' || qm === 'retail' ? qm : saved.mode ?? 'retail';
   return {
     screen: 'home', stack: [], pid: 1, mode, lang, cur,
-    cart: [{ id: 1, qty: 1, color: 'Black' }, { id: 5, qty: 2, color: '30ml' }], wish: [3, 7, 4],
+    cart: saved.cart ?? [{ id: 1, qty: 1, color: 'Black' }, { id: 5, qty: 2, color: '30ml' }], wish: saved.wish ?? [3, 7, 4],
     cat: 'All', railCat: 'Electronics', query: '', sort: 'bestMatch', colorIdx: 0, qty: mode === 'wholesale' ? 10 : 1, slot: 0,
-    ship: 'standard', pay: 'knet', placed: false, coupon: false, toast: '',
-    rfq: { item: '', qty: '', price: '' }, rfqErr: '', follow: false, draft: '',
+    ship: 'standard', pay: 'knet', placed: false, coupon: saved.coupon ?? false, toast: '',
+    rfq: { item: '', qty: '', price: '' }, rfqErr: '', follow: saved.follow ?? false, draft: '',
     msgs: [{ me: false, k: 'm_hello' }],
   };
 }
@@ -94,6 +128,7 @@ function useStoreValue() {
   useEffect(() => {
     document.documentElement.lang = s.lang;
   }, [s.lang]);
+  useEffect(() => save(s), [s.lang, s.cur, s.mode, s.cart, s.wish, s.follow, s.coupon]);
 
   const scrollTop = () => requestAnimationFrame(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;

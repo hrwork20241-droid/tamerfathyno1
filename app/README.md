@@ -14,6 +14,8 @@ Below 480px wide it fills the viewport like a native app.
 
 ## Options
 
+The cart, wishlist, followed store, coupon, language, currency and mode are saved in `localStorage` (`no1:v1`), so they survive a reload.
+
 You can set the starting language, currency and mode with URL parameters. These replace the design's component props:
 
 `/?lang=en&currency=EGP&mode=wholesale`
