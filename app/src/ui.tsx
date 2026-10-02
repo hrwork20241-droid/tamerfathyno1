@@ -30,8 +30,13 @@ const STRIPES = {
   dark: ['#2c2a24', '#24221d'],
 };
 
-/** Diagonal-stripe image placeholder, used until real product photos exist. */
-export function Ph({ label, step = 8, tone = 'light', fontSize = 10, style, children, onClick }: {
+/**
+ * Image box. With `src` it shows that image (cropped to fill); without one it
+ * falls back to the design's diagonal-stripe placeholder and `label`.
+ */
+export function Ph({ src, alt = '', label, step = 8, tone = 'light', fontSize = 10, style, children, onClick }: {
+  src?: string;
+  alt?: string;
   label?: ReactNode;
   step?: number;
   tone?: keyof typeof STRIPES;
@@ -45,14 +50,17 @@ export function Ph({ label, step = 8, tone = 'light', fontSize = 10, style, chil
     <div
       onClick={onClick}
       style={{
-        background: `repeating-linear-gradient(135deg,${a} 0 ${step}px,${b} ${step}px ${step * 2}px)`,
+        background: src ? a : `repeating-linear-gradient(135deg,${a} 0 ${step}px,${b} ${step}px ${step * 2}px)`,
+        ...(src ? { position: 'relative', overflow: 'hidden' } : null),
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         font: mono(500, fontSize), color: C.faint,
         cursor: onClick ? 'pointer' : undefined,
         ...style,
       }}
     >
-      {label}
+      {src
+        ? <img src={src} alt={alt} loading="lazy" draggable={false} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        : label}
       {children}
     </div>
   );

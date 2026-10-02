@@ -1,3 +1,4 @@
+import { PRODUCT_IMAGES } from '../data/images';
 import { CATEGORIES, SUBS } from '../data/products';
 import { useStore } from '../store';
 import { C, f, Ph } from '../ui';
@@ -31,12 +32,15 @@ export function Browse() {
           })}
         </div>
         <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 16, background: '#fff' }}>
-          <Ph label={`${word(s.railCat)} banner`} style={{ height: 90, borderRadius: 12 }} />
+          <div style={{ height: 90, borderRadius: 12, background: C.ink, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, paddingBlock: 0, paddingInlineStart: 16, paddingInlineEnd: 6, overflow: 'hidden' }}>
+            <div style={{ flex: 1, minWidth: 0, font: f(900, 20, 1.1), letterSpacing: -0.5 }}>{word(s.railCat)}</div>
+            {inCat[0] && <Ph src={PRODUCT_IMAGES[inCat[0].id]} alt="" style={{ width: 78, height: 78, flex: 'none', borderRadius: 10 }} />}
+          </div>
           <div style={{ font: f(800, 14) }}>{t('shopByType')}</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '14px 8px' }}>
             {SUBS[s.railCat].map(l => (
               <button key={l} onClick={() => go('search', { query: s.railCat })} style={{ border: 'none', background: 'none', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                <Ph step={6} style={{ width: 60, height: 60, borderRadius: '50%' }} />
+                <div aria-hidden style={{ width: 60, height: 60, borderRadius: '50%', background: C.accentSoft, color: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', font: f(800, 22) }}>{Array.from(word(l))[0]}</div>
                 <span style={{ font: f(500, 11, 1.2), textAlign: 'center', color: C.ink }}>{word(l)}</span>
               </button>
             ))}
@@ -45,7 +49,7 @@ export function Browse() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {top.map(p => (
               <div key={p.id} onClick={() => open(p.id)} style={{ display: 'flex', gap: 10, cursor: 'pointer' }}>
-                <Ph step={6} style={{ width: 64, height: 64, flex: 'none', borderRadius: 10 }} />
+                <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} step={6} style={{ width: 64, height: 64, flex: 'none', borderRadius: 10 }} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
                   <span style={{ font: f(500, 12, 1.3) }}>{p.title}</span>
                   <b style={{ font: f(800, 14), color: C.accent, whiteSpace: 'nowrap' }}>{p.priceText}</b>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400"><rect width="400" height="400" fill="#eceef1"/><ellipse cx="190" cy="330" rx="100" ry="14" fill="#000" opacity=".08"/>
+<path d="M300 250 Q360 250 360 300 Q360 350 300 350 L250 350" fill="none" stroke="#d5d8dd" stroke-width="12" stroke-linecap="round"/>
+<rect x="110" y="140" width="160" height="180" rx="28" fill="#fdfdfd" stroke="#d9dce1" stroke-width="3"/>
+<rect x="150" y="100" width="14" height="44" rx="4" fill="#b9bdc4"/><rect x="216" y="100" width="14" height="44" rx="4" fill="#b9bdc4"/>
+<rect x="150" y="190" width="80" height="16" rx="8" fill="#2b2d31"/><rect x="150" y="222" width="80" height="16" rx="8" fill="#2b2d31"/><rect x="164" y="254" width="52" height="18" rx="5" fill="#2b2d31"/>
+<text x="190" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="14" fill="#9aa0a8">65W GaN</text></svg>

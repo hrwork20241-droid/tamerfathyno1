@@ -1,3 +1,4 @@
+import { PRODUCT_IMAGES } from '../data/images';
 import { useStore, type SortKey } from '../store';
 import { BackButton, C, chip, f, mono, Ph } from '../ui';
 
@@ -73,7 +74,7 @@ export function Search() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 10px' }}>
             {results.map(p => (
               <div key={p.id} onClick={() => open(p.id)} style={{ background: '#fff', borderRadius: 16, overflow: 'hidden', cursor: 'pointer' }}>
-                <Ph label={p.img} style={{ aspectRatio: '1' }} />
+                <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} style={{ aspectRatio: '1' }} />
                 <div style={{ padding: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <div style={{ font: f(500, 13, 1.3) }}>{p.title}</div>
                   <b style={{ font: f(800, 16), color: C.accent, whiteSpace: 'nowrap' }}>{p.priceText}</b>

@@ -32,5 +32,12 @@ You can set the starting language, currency and mode with URL parameters. These 
 - `src/screens/`: one component per screen (18 in total, including Addresses, Payment methods and Help center from the account menu)
 
 Prices are stored in KWD and converted at the indicative rates in `data/locale.ts`.
-Product images are striped placeholders, as in the design.
+Product images, the Mega Sale card and the store cover use temporary illustrations from `public/images/`.
+
+### Replacing the images
+
+1. Put your photo in `public/images/` (jpg, png, webp or svg). Square photos of at least 800×800 work best for products.
+2. In `src/data/images.ts`, change that product's path, e.g. `1: 'images/products/earbuds.jpg'`.
+
+Images are cropped to fill their box, so keep the product centred with some margin.
 All 8 languages are complete: every UI string, plus category, colour and product names. English and Arabic live in `data/locale.ts`, the other six in `data/lang/*.ts`, and the account screens' strings for all 8 in `data/lang/account.ts`. TypeScript rejects a language pack that is missing a string. For languages other than English and Arabic, currency names come from the browser's `Intl.DisplayNames`.

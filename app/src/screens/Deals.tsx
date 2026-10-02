@@ -1,3 +1,4 @@
+import { PRODUCT_IMAGES } from '../data/images';
 import { useCountdown, useStore } from '../store';
 import { C, f, mono, Ph } from '../ui';
 
@@ -38,7 +39,7 @@ export function Deals() {
       <div style={{ padding: '14px 16px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {list.map(p => (
           <div key={p.id} style={{ background: '#fff', borderRadius: 16, padding: 10, display: 'flex', gap: 12 }}>
-            <Ph label={p.img} fontSize={9} onClick={() => open(p.id)} style={{ width: 96, height: 96, flex: 'none', borderRadius: 12 }} />
+            <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} fontSize={9} onClick={() => open(p.id)} style={{ width: 96, height: 96, flex: 'none', borderRadius: 12 }} />
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 5 }}>
               <div style={{ font: f(500, 13, 1.3) }}>{p.title}</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>

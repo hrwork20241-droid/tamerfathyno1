@@ -1,3 +1,4 @@
+import { PRODUCT_IMAGES } from '../data/images';
 import { productById, tiersOf, useStore } from '../store';
 import { C, f, mono, Ph } from '../ui';
 
@@ -16,7 +17,7 @@ export function Product() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: 20 }}>
-      <Ph label={`${p.img} · product shot`} step={10} fontSize={11} style={{ position: 'relative', height: 360 }}>
+      <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} step={10} fontSize={11} style={{ position: 'relative', height: 360 }}>
         <button onClick={back} aria-label="Back" style={{ position: 'absolute', top: 10, insetInlineStart: 14, width: 40, height: 40, borderRadius: '50%', border: 'none', background: '#fff', font: f(700, 18) }}>{t('back')}</button>
         <button onClick={() => say('t_link')} style={{ position: 'absolute', top: 10, insetInlineEnd: 14, height: 40, padding: '0 14px', borderRadius: 999, border: 'none', background: '#fff', font: f(600, 13) }}>{t('share')}</button>
         <div style={{ position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 5 }}>
@@ -113,7 +114,7 @@ export function Product() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {related.map(r => (
             <div key={r.id} onClick={() => open(r.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <Ph label={r.img} style={{ aspectRatio: '1', borderRadius: 14 }} />
+              <Ph src={PRODUCT_IMAGES[r.id]} alt={r.title} style={{ aspectRatio: '1', borderRadius: 14 }} />
               <div style={{ font: f(500, 12, 1.3) }}>{r.title}</div>
               <b style={{ font: f(800, 14), color: C.accent, whiteSpace: 'nowrap' }}>{r.priceText}</b>
             </div>

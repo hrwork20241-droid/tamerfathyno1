@@ -1,3 +1,4 @@
+import { PRODUCT_IMAGES } from '../data/images';
 import { CUR, LANGS, type TKey } from '../data/locale';
 import { useStore, type Screen } from '../store';
 import { PAY_DEFS } from './Cart';
@@ -9,7 +10,8 @@ const DONE_STEPS = 3; // ordered, packed, shipped
 export function Orders() {
   const { t, add, say } = useStore();
   const reorder = () => { add(8, 1, 'White'); say('t_added'); };
-  const past: [string, number, TKey, string][] = [['#NO1-47102', 3, 'items', '22/09'], ['#NO1-45877', 1, 'item', '03/09']];
+  // [order, item count, unit, delivered, product shown as thumbnail]
+  const past: [string, number, TKey, string, number][] = [['#NO1-47102', 3, 'items', '22/09', 8], ['#NO1-45877', 1, 'item', '03/09', 3]];
 
   return (
     <div style={screenPad}>
@@ -39,9 +41,9 @@ export function Orders() {
         </div>
       </div>
       <div style={{ font: f(800, 14) }}>{t('pastOrders')}</div>
-      {past.map(([id, n, unit, date]) => (
+      {past.map(([id, n, unit, date, thumb]) => (
         <div key={id} style={{ background: '#fff', borderRadius: 16, padding: 12, display: 'flex', gap: 12, alignItems: 'center' }}>
-          <Ph step={6} style={{ width: 56, height: 56, borderRadius: 10 }} />
+          <Ph src={PRODUCT_IMAGES[thumb]} step={6} style={{ width: 56, height: 56, flex: 'none', borderRadius: 10 }} />
           <div style={{ flex: 1 }}>
             <div style={{ font: f(700, 13) }}>{id} · {n} {t(unit)}</div>
             <div style={{ font: f(500, 12), color: C.ok }}>{t('deliveredOn')} {date}</div>
@@ -66,7 +68,7 @@ export function Wishlist() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 10px' }}>
         {items.map(p => (
           <div key={p.id} style={{ background: '#fff', borderRadius: 16, overflow: 'hidden' }}>
-            <Ph label={p.img} onClick={() => open(p.id)} style={{ position: 'relative', aspectRatio: '1' }} />
+            <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} onClick={() => open(p.id)} style={{ position: 'relative', aspectRatio: '1' }} />
             <div style={{ padding: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
               <div style={{ font: f(500, 13, 1.3) }}>{p.title}</div>
               <b style={{ font: f(800, 15), color: C.accent, whiteSpace: 'nowrap' }}>{p.priceText}</b>
