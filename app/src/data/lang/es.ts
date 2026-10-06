@@ -9,7 +9,7 @@ export const es: LangPack = {
     sellerMeta: '98 % positivo · Envía desde Kuwait', chat: 'Chat', store: 'Tienda', reviews: 'Reseñas', reviewsL: 'reseñas', sold: 'vendidos',
     rev1: 'Llegó dos días antes y es igual que en las fotos. Buen embalaje.', rev2: 'Buena calidad por el precio. Pedí 50 para nuestra tienda y el vendedor respondió rápido.', rev1n: 'Noura K.', rev2n: 'Yusef M.',
     alsoLike: 'También te puede gustar', cart: 'Carrito', cartEmpty: 'Tu carrito está vacío', startShopping: 'Empezar a comprar', freeUnlocked: 'Envío gratis desbloqueado en este pedido', subtotal: 'Subtotal',
-    discount: 'Descuento', total: 'Total', checkout: 'Pagar', change: 'Cambiar', name: 'Fátima Al-Sabah', address: 'Bloque 4, calle 12, casa 7, Salmiya', payment: 'Pago', pay: 'Pagar',
+    discount: 'Descuento', total: 'Total', checkout: 'Pagar', change: 'Cambiar', name: 'Tamer Fathy', address: 'Bloque 4, calle 12, casa 7, Salmiya', payment: 'Pago', pay: 'Pagar',
     orderPlaced: 'Pedido realizado', trackOrder: 'Seguir pedido', continueShopping: 'Seguir comprando', myOrders: 'Mis pedidos', shipped: 'Enviado', pastOrders: 'Pedidos anteriores', items: 'artículos', item: 'artículo',
     deliveredOn: 'Entregado el', buyAgain: 'Volver a comprar', wishlist: 'Favoritos', wishEmpty: 'Toca ♡ en cualquier producto para guardarlo aquí.', add: 'Añadir', gold: 'Miembro NO1 Gold', orders: 'Pedidos', points: 'Puntos',
     rfqIntro: 'Los proveedores verificados responden con ofertas, normalmente en 24 horas.', product: 'Producto', rfqItemPh: 'p. ej. Bolsas de algodón con logo', targetPrice: 'Precio objetivo / ud.', details: 'Detalles',

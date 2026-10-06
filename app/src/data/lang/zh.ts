@@ -9,7 +9,7 @@ export const zh: LangPack = {
     sellerMeta: '98% 好评 · 科威特发货', chat: '咨询', store: '店铺', reviews: '评价', reviewsL: '条评价', sold: '已售',
     rev1: '提前两天到货，和图片一致，包装很结实。', rev2: '性价比高。给店里订了 50 件，卖家回复很快。', rev1n: '努拉 K.', rev2n: '优素福 M.',
     alsoLike: '猜你喜欢', cart: '购物车', cartEmpty: '购物车是空的', startShopping: '去逛逛', freeUnlocked: '本单已享免费配送', subtotal: '小计',
-    discount: '优惠', total: '合计', checkout: '结算', change: '修改', name: '法蒂玛·萨巴赫', address: '萨尔米亚 4 区 12 街 7 号', payment: '支付方式', pay: '支付',
+    discount: '优惠', total: '合计', checkout: '结算', change: '修改', name: '塔梅尔·法特希', address: '萨尔米亚 4 区 12 街 7 号', payment: '支付方式', pay: '支付',
     orderPlaced: '下单成功', trackOrder: '查看物流', continueShopping: '继续购物', myOrders: '我的订单', shipped: '已发货', pastOrders: '历史订单', items: '件', item: '件',
     deliveredOn: '已送达', buyAgain: '再次购买', wishlist: '收藏', wishEmpty: '点击商品上的 ♡ 即可收藏到这里。', add: '加购', gold: 'NO1 金卡会员', orders: '订单', points: '积分',
     rfqIntro: '认证供应商通常会在 24 小时内回复报价。', product: '商品', rfqItemPh: '例如：定制 logo 帆布袋', targetPrice: '目标单价', details: '详细说明',

@@ -9,7 +9,7 @@ export const fr: LangPack = {
     sellerMeta: '98 % positif · Expédié du Koweït', chat: 'Discuter', store: 'Boutique', reviews: 'Avis', reviewsL: 'avis', sold: 'vendus',
     rev1: 'Arrivé deux jours en avance et conforme aux photos. Emballage solide.', rev2: 'Bonne qualité pour le prix. Commandé 50 pièces pour notre magasin, le vendeur a répondu vite.', rev1n: 'Noura K.', rev2n: 'Youssef M.',
     alsoLike: 'Vous aimerez aussi', cart: 'Panier', cartEmpty: 'Votre panier est vide', startShopping: 'Commencer vos achats', freeUnlocked: 'Livraison gratuite débloquée pour cette commande', subtotal: 'Sous-total',
-    discount: 'Remise', total: 'Total', checkout: 'Paiement', change: 'Modifier', name: 'Fatima Al-Sabah', address: 'Bloc 4, rue 12, maison 7, Salmiya', payment: 'Paiement', pay: 'Payer',
+    discount: 'Remise', total: 'Total', checkout: 'Paiement', change: 'Modifier', name: 'Tamer Fathy', address: 'Bloc 4, rue 12, maison 7, Salmiya', payment: 'Paiement', pay: 'Payer',
     orderPlaced: 'Commande passée', trackOrder: 'Suivre la commande', continueShopping: 'Continuer mes achats', myOrders: 'Mes commandes', shipped: 'Expédiée', pastOrders: 'Commandes passées', items: 'articles', item: 'article',
     deliveredOn: 'Livrée le', buyAgain: 'Racheter', wishlist: 'Favoris', wishEmpty: 'Touchez ♡ sur un produit pour l’enregistrer ici.', add: 'Ajouter', gold: 'Membre NO1 Gold', orders: 'Commandes', points: 'Points',
     rfqIntro: 'Les fournisseurs vérifiés répondent avec des offres, généralement sous 24 heures.', product: 'Produit', rfqItemPh: 'ex. Sacs en coton personnalisés', targetPrice: 'Prix cible / pièce', details: 'Détails',

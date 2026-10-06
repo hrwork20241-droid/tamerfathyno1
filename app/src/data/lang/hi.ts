@@ -9,7 +9,7 @@ export const hi: LangPack = {
     sellerMeta: '98% सकारात्मक · कुवैत से शिपिंग', chat: 'चैट', store: 'स्टोर', reviews: 'समीक्षाएँ', reviewsL: 'समीक्षाएँ', sold: 'बिके',
     rev1: 'दो दिन पहले पहुँचा और तस्वीरों जैसा ही है। पैकिंग मज़बूत थी।', rev2: 'कीमत के हिसाब से अच्छी क्वालिटी। दुकान के लिए 50 मँगवाए, विक्रेता ने जल्दी जवाब दिया।', rev1n: 'नूरा के.', rev2n: 'यूसुफ़ एम.',
     alsoLike: 'आपको ये भी पसंद आ सकते हैं', cart: 'कार्ट', cartEmpty: 'आपकी कार्ट खाली है', startShopping: 'खरीदारी शुरू करें', freeUnlocked: 'इस ऑर्डर पर मुफ़्त डिलीवरी मिल गई', subtotal: 'उप-योग',
-    discount: 'छूट', total: 'कुल', checkout: 'चेकआउट', change: 'बदलें', name: 'फ़ातिमा अल-सबाह', address: 'ब्लॉक 4, गली 12, मकान 7, सालमिया', payment: 'भुगतान', pay: 'भुगतान करें',
+    discount: 'छूट', total: 'कुल', checkout: 'चेकआउट', change: 'बदलें', name: 'तामेर फ़तही', address: 'ब्लॉक 4, गली 12, मकान 7, सालमिया', payment: 'भुगतान', pay: 'भुगतान करें',
     orderPlaced: 'ऑर्डर हो गया', trackOrder: 'ऑर्डर ट्रैक करें', continueShopping: 'खरीदारी जारी रखें', myOrders: 'मेरे ऑर्डर', shipped: 'भेज दिया गया', pastOrders: 'पिछले ऑर्डर', items: 'आइटम', item: 'आइटम',
     deliveredOn: 'डिलीवर हुआ', buyAgain: 'फिर से खरीदें', wishlist: 'पसंदीदा', wishEmpty: 'किसी भी उत्पाद पर ♡ दबाएँ और वह यहाँ सेव हो जाएगा।', add: 'जोड़ें', gold: 'NO1 गोल्ड सदस्य', orders: 'ऑर्डर', points: 'पॉइंट्स',
     rfqIntro: 'सत्यापित सप्लायर्स आमतौर पर 24 घंटे में ऑफ़र भेजते हैं।', product: 'उत्पाद', rfqItemPh: 'जैसे लोगो वाले कॉटन बैग', targetPrice: 'लक्षित कीमत / पीस', details: 'विवरण',

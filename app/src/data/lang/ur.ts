@@ -9,7 +9,7 @@ export const ur: LangPack = {
     sellerMeta: '98% مثبت · کویت سے ترسیل', chat: 'چیٹ', store: 'اسٹور', reviews: 'جائزے', reviewsL: 'جائزے', sold: 'فروخت',
     rev1: 'دو دن پہلے پہنچ گیا اور تصویروں جیسا ہے۔ پیکنگ مضبوط تھی۔', rev2: 'قیمت کے لحاظ سے اچھا معیار۔ دکان کے لیے 50 منگوائے، بیچنے والے نے جلد جواب دیا۔', rev1n: 'نورہ ک۔', rev2n: 'یوسف م۔',
     alsoLike: 'آپ کو یہ بھی پسند آ سکتے ہیں', cart: 'ٹوکری', cartEmpty: 'آپ کی ٹوکری خالی ہے', startShopping: 'خریداری شروع کریں', freeUnlocked: 'اس آرڈر پر مفت ڈیلیوری مل گئی', subtotal: 'ذیلی کل',
-    discount: 'رعایت', total: 'کل', checkout: 'چیک آؤٹ', change: 'تبدیل کریں', name: 'فاطمہ الصباح', address: 'بلاک 4، گلی 12، مکان 7، سالمیہ', payment: 'ادائیگی', pay: 'ادا کریں',
+    discount: 'رعایت', total: 'کل', checkout: 'چیک آؤٹ', change: 'تبدیل کریں', name: 'تامر فتحی', address: 'بلاک 4، گلی 12، مکان 7، سالمیہ', payment: 'ادائیگی', pay: 'ادا کریں',
     orderPlaced: 'آرڈر ہو گیا', trackOrder: 'آرڈر ٹریک کریں', continueShopping: 'خریداری جاری رکھیں', myOrders: 'میرے آرڈرز', shipped: 'روانہ', pastOrders: 'پچھلے آرڈرز', items: 'اشیاء', item: 'شے',
     deliveredOn: 'پہنچا دیا گیا', buyAgain: 'دوبارہ خریدیں', wishlist: 'پسندیدہ', wishEmpty: 'کسی بھی پروڈکٹ پر ♡ دبائیں تاکہ وہ یہاں محفوظ ہو جائے۔', add: 'شامل کریں', gold: 'NO1 گولڈ ممبر', orders: 'آرڈرز', points: 'پوائنٹس',
     rfqIntro: 'تصدیق شدہ سپلائرز عموماً 24 گھنٹوں میں آفرز بھیجتے ہیں۔', product: 'پروڈکٹ', rfqItemPh: 'مثلاً لوگو والے کاٹن بیگ', targetPrice: 'ہدف قیمت / فی عدد', details: 'تفصیلات',

@@ -9,7 +9,7 @@ export const tr: LangPack = {
     sellerMeta: '%98 olumlu · Kuveyt’ten gönderim', chat: 'Mesaj', store: 'Mağaza', reviews: 'Yorumlar', reviewsL: 'yorum', sold: 'satıldı',
     rev1: 'İki gün erken geldi, fotoğraflardaki gibi. Paketleme sağlamdı.', rev2: 'Fiyatına göre kaliteli. Dükkânımız için 50 adet aldık, satıcı hızlı cevap verdi.', rev1n: 'Nura K.', rev2n: 'Yusuf M.',
     alsoLike: 'Bunları da beğenebilirsin', cart: 'Sepet', cartEmpty: 'Sepetin boş', startShopping: 'Alışverişe başla', freeUnlocked: 'Bu siparişte ücretsiz teslimat açıldı', subtotal: 'Ara toplam',
-    discount: 'İndirim', total: 'Toplam', checkout: 'Ödeme', change: 'Değiştir', name: 'Fatıma Al-Sabah', address: 'Blok 4, Sokak 12, Ev 7, Salmiya', payment: 'Ödeme', pay: 'Öde',
+    discount: 'İndirim', total: 'Toplam', checkout: 'Ödeme', change: 'Değiştir', name: 'Tamer Fathy', address: 'Blok 4, Sokak 12, Ev 7, Salmiya', payment: 'Ödeme', pay: 'Öde',
     orderPlaced: 'Sipariş alındı', trackOrder: 'Siparişi takip et', continueShopping: 'Alışverişe devam', myOrders: 'Siparişlerim', shipped: 'Kargoda', pastOrders: 'Geçmiş siparişler', items: 'ürün', item: 'ürün',
     deliveredOn: 'Teslim edildi', buyAgain: 'Tekrar al', wishlist: 'Favoriler', wishEmpty: 'Kaydetmek için herhangi bir üründe ♡ simgesine dokun.', add: 'Ekle', gold: 'NO1 Gold üye', orders: 'Siparişler', points: 'Puan',
     rfqIntro: 'Onaylı tedarikçiler genellikle 24 saat içinde teklif gönderir.', product: 'Ürün', rfqItemPh: 'ör. Logolu pamuk çantalar', targetPrice: 'Hedef fiyat / adet', details: 'Detaylar',
