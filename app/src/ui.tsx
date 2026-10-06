@@ -47,21 +47,21 @@ export function Ph({ src, alt = '', label, step = 8, tone = 'light', fontSize = 
 }) {
   const [a, b] = STRIPES[tone];
   const [failed, setFailed] = useState<string>();
-  if (src && failed === src) src = undefined;
+  const shown = src && src !== failed ? src : undefined;
   return (
     <div
       onClick={onClick}
       style={{
-        background: src ? a : `repeating-linear-gradient(135deg,${a} 0 ${step}px,${b} ${step}px ${step * 2}px)`,
-        ...(src ? { position: 'relative', overflow: 'hidden' } : null),
+        background: shown ? a : `repeating-linear-gradient(135deg,${a} 0 ${step}px,${b} ${step}px ${step * 2}px)`,
+        ...(shown ? { position: 'relative', overflow: 'hidden' } : null),
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         font: mono(500, fontSize), color: C.faint,
         cursor: onClick ? 'pointer' : undefined,
         ...style,
       }}
     >
-      {src
-        ? <img src={src} alt={alt} loading="lazy" draggable={false} onError={() => setFailed(src)} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+      {shown
+        ? <img src={shown} alt={alt} loading="lazy" draggable={false} onError={() => setFailed(shown)} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
         : label}
       {children}
     </div>
