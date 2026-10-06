@@ -13,6 +13,9 @@ npm test         # unit tests: prices, tiers, currency, cart totals, saved data,
 On desktop the app renders inside the phone frame, next to the "Jump to" showcase panel.
 Below 480px wide it fills the viewport like a native app.
 
+Once hosted over HTTPS it can be installed to a phone's home screen ("Add to Home Screen" / "Install app") with the NO1 icon, and it opens full screen.
+The manifest is `public/manifest.webmanifest`; icons are in `public/icons/` (`icon.svg` is the source for the PNGs).
+
 ## Options
 
 The cart, wishlist, followed store, coupon, saved addresses, default payment method, language, currency and mode are saved in `localStorage` (`no1:v1`), so they survive a reload.

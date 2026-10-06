@@ -67,6 +67,6 @@ input, textarea { font-family: inherit; color: var(--ink); }
   .stage { padding: 0; gap: 0; display: block; }
   .side { display: none !important; }
   .device { width: 100vw; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; }
-  .screen { border-radius: 0; }
+  .screen { border-radius: 0; padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
   .status-bar { display: none !important; }
 }
