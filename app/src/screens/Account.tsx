@@ -1,4 +1,4 @@
-import { PRODUCT_IMAGES } from '../data/images';
+import { AVATAR_IMAGE, PRODUCT_IMAGES } from '../data/images';
 import { CUR, LANGS, type TKey } from '../data/locale';
 import { useStore, type Screen } from '../store';
 import { PAY_DEFS } from './Cart';
@@ -100,7 +100,7 @@ export function Account() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: '0 16px 24px' }}>
       <div style={{ background: C.ink, color: '#fff', borderRadius: 22, padding: 18, display: 'flex', flexDirection: 'column', gap: 16, marginTop: 6 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', font: f(900, 20) }}>FA</div>
+          <Ph src={AVATAR_IMAGE} alt={t('name')} style={{ width: 56, height: 56, flex: 'none', borderRadius: '50%', border: `2px solid ${C.accent}`, boxSizing: 'border-box' }} />
           <div style={{ flex: 1 }}>
             <div style={{ font: f(800, 18) }}>{t('name')}</div>
             <div style={{ font: f(600, 12), color: C.sale }}>{t('gold')}</div>

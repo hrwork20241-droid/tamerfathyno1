@@ -32,7 +32,7 @@ You can set the starting language, currency and mode with URL parameters. These 
 - `src/screens/`: one component per screen (18 in total, including Addresses, Payment methods and Help center from the account menu)
 
 Prices are stored in KWD and converted at the indicative rates in `data/locale.ts`.
-Product images, the Mega Sale card and the store cover use temporary illustrations from `public/images/`.
+Product images, the Mega Sale card and the store cover use temporary illustrations from `public/images/`. The profile photo on the Me screen is `public/images/avatar.jpg`.
 
 ### Replacing the images
 

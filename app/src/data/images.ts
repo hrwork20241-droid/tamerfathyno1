@@ -21,3 +21,5 @@ export const PRODUCT_IMAGES: Record<number, string> = {
 export const CAMPAIGN_IMAGE = 'images/campaign.svg';
 /** Seller store header (wide, about 3:1). */
 export const STORE_COVER = 'images/store-cover.svg';
+/** Profile photo on the Me (account) screen. */
+export const AVATAR_IMAGE = 'images/avatar.jpg';
