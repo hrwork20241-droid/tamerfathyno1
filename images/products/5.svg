@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400"><rect width="400" height="400" fill="#fbe8da"/><ellipse cx="200" cy="345" rx="80" ry="14" fill="#000" opacity=".08"/>
+<rect x="150" y="160" width="100" height="180" rx="22" fill="#d97b2b"/>
+<rect x="150" y="160" width="100" height="180" rx="22" fill="url(#g)"/>
+<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<rect x="164" y="220" width="72" height="80" rx="6" fill="#fff8f0"/>
+<text x="200" y="256" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="26" fill="#d97b2b">C</text>
+<text x="200" y="282" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#8a5a33">SERUM 30ml</text>
+<rect x="172" y="128" width="56" height="36" rx="6" fill="#2b2b2b"/>
+<path d="M180 128 L180 92 Q200 52 220 92 L220 128 Z" fill="#f4f1ec"/></svg>
