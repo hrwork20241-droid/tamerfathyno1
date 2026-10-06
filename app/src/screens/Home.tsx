@@ -1,4 +1,4 @@
-import { CAMPAIGN_IMAGE, PRODUCT_IMAGES } from '../data/images';
+import { CAMPAIGN_IMAGE } from '../data/images';
 import { CATEGORIES } from '../data/products';
 import { useCountdown, useStore } from '../store';
 import { C, chip, f, ModeSwitch, mono, Ph, stop } from '../ui';
@@ -97,8 +97,8 @@ export function Home() {
       <div className="nos" style={{ display: 'flex', gap: 10, overflowX: 'auto', margin: '-6px -16px 0', padding: '0 16px' }}>
         {flash.map(p => (
           <button key={p.id} onClick={() => open(p.id)} style={{ flex: 'none', width: 120, border: 'none', background: 'none', padding: 0, textAlign: 'start', display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} style={{ position: 'relative', width: 120, height: 120, borderRadius: 14 }}>
-              <span style={{ position: 'absolute', top: 6, insetInlineStart: 6, background: C.accent, color: '#fff', font: f(800, 11), padding: '3px 6px', borderRadius: 6, whiteSpace: 'nowrap' }}>{p.offText}</span>
+            <Ph src={p.image} alt={p.title} style={{ position: 'relative', width: 120, height: 120, borderRadius: 14 }}>
+              {p.offText && <span style={{ position: 'absolute', top: 6, insetInlineStart: 6, background: C.accent, color: '#fff', font: f(800, 11), padding: '3px 6px', borderRadius: 6, whiteSpace: 'nowrap' }}>{p.offText}</span>}
             </Ph>
             <div style={{ font: f(800, 15), color: C.accent }}>{p.priceText}</div>
             <div style={{ height: 5, borderRadius: 3, background: C.line, overflow: 'hidden', width: '100%' }}>
@@ -113,7 +113,7 @@ export function Home() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 10px', marginTop: -6 }}>
         {grid.map(p => (
           <div key={p.id} onClick={() => open(p.id)} style={{ background: '#fff', borderRadius: 16, overflow: 'hidden', cursor: 'pointer', display: 'flex', flexDirection: 'column' }}>
-            <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} style={{ position: 'relative', aspectRatio: '1' }}>
+            <Ph src={p.image} alt={p.title} style={{ position: 'relative', aspectRatio: '1' }}>
               <button
                 onClick={e => { stop(e); toggleWish(p.id); }}
                 aria-label={t('wishlist')}

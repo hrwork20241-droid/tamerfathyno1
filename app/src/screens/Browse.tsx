@@ -1,4 +1,3 @@
-import { PRODUCT_IMAGES } from '../data/images';
 import { CATEGORIES, SUBS } from '../data/products';
 import { useStore } from '../store';
 import { C, f, Ph } from '../ui';
@@ -34,7 +33,7 @@ export function Browse() {
         <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 16, background: '#fff' }}>
           <div style={{ height: 90, borderRadius: 12, background: C.ink, color: '#fff', display: 'flex', alignItems: 'center', gap: 10, paddingBlock: 0, paddingInlineStart: 16, paddingInlineEnd: 6, overflow: 'hidden' }}>
             <div style={{ flex: 1, minWidth: 0, font: f(900, 20, 1.1), letterSpacing: -0.5 }}>{word(s.railCat)}</div>
-            {inCat[0] && <Ph src={PRODUCT_IMAGES[inCat[0].id]} alt="" style={{ width: 78, height: 78, flex: 'none', borderRadius: 10 }} />}
+            {inCat[0] && <Ph src={inCat[0].image} alt="" style={{ width: 78, height: 78, flex: 'none', borderRadius: 10 }} />}
           </div>
           <div style={{ font: f(800, 14) }}>{t('shopByType')}</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '14px 8px' }}>
@@ -49,7 +48,7 @@ export function Browse() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {top.map(p => (
               <div key={p.id} onClick={() => open(p.id)} style={{ display: 'flex', gap: 10, cursor: 'pointer' }}>
-                <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} step={6} style={{ width: 64, height: 64, flex: 'none', borderRadius: 10 }} />
+                <Ph src={p.image} alt={p.title} step={6} style={{ width: 64, height: 64, flex: 'none', borderRadius: 10 }} />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
                   <span style={{ font: f(500, 12, 1.3) }}>{p.title}</span>
                   <b style={{ font: f(800, 14), color: C.accent, whiteSpace: 'nowrap' }}>{p.priceText}</b>

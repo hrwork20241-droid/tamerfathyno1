@@ -22,6 +22,12 @@ Every push to the `no1-app` branch runs `.github/workflows/deploy-pages.yml`: it
 To serve it, turn Pages on once: **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `gh-pages`, folder `/ (root)` → Save**.
 The site is then at https://hrwork20241-droid.github.io/tamerfathyno1/ and can be installed from a phone's browser.
 
+## Control panel (products)
+
+Products can be managed from the control panel at `<app link>#admin` (Arabic): add, edit, hide or delete products, with photo upload.
+It stores them in Supabase. Setup steps are in `../supabase/README.md`, the database script is `../supabase/setup.sql`, and the connection settings go in `src/config.ts`.
+Until it is connected, or while the database has no products, the shop shows the built-in samples.
+
 ## Options
 
 The cart, wishlist, followed store, coupon, saved addresses, default payment method, language, currency and mode are saved in `localStorage` (`no1:v1`), so they survive a reload.

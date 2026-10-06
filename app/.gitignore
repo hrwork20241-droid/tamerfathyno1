@@ -3,3 +3,4 @@ dist
 *.tsbuildinfo
 # Personal profile photo: kept local, never committed
 public/images/avatar.jpg
+dist-test

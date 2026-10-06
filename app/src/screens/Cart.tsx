@@ -1,4 +1,3 @@
-import { PRODUCT_IMAGES } from '../data/images';
 import type { TKey } from '../data/locale';
 import { productById, useStore, type PayKey, type ShipKey } from '../store';
 import { BackHeader, C, f, mono, Ph, screenPad } from '../ui';
@@ -67,7 +66,7 @@ export function Cart() {
           <div style={{ background: C.ok, color: '#fff', borderRadius: 12, padding: '10px 14px', font: f(600, 12) }}>{t('freeUnlocked')}</div>
           {lines.map(c => (
             <div key={c.i + '-' + c.id + '-' + c.variant} style={{ background: '#fff', borderRadius: 16, padding: 12, display: 'flex', gap: 12 }}>
-              <Ph src={PRODUCT_IMAGES[c.id]} alt={c.title} fontSize={9} onClick={() => open(c.id)} style={{ width: 84, height: 84, flex: 'none', borderRadius: 12 }} />
+              <Ph src={c.image} alt={c.title} fontSize={9} onClick={() => open(c.id)} style={{ width: 84, height: 84, flex: 'none', borderRadius: 12 }} />
               <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <div style={{ flex: 1, font: f(500, 13, 1.3) }}>{c.title}</div>

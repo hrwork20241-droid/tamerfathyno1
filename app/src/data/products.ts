@@ -14,6 +14,10 @@ export interface Product {
   seller: string;
   img: string; // placeholder label until real imagery exists
   colors: string[];
+  /** Photo URL for products added from the control panel (samples use data/images.ts). */
+  image?: string;
+  /** True for products loaded from the online database rather than the built-in samples. */
+  fromDb?: boolean;
 }
 
 export const P: Product[] = [

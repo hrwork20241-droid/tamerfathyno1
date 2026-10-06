@@ -1,4 +1,4 @@
-import { PRODUCT_IMAGES, STORE_COVER } from '../data/images';
+import { STORE_COVER } from '../data/images';
 import type { TKey } from '../data/locale';
 import { useStore } from '../store';
 import { BackButton, BackHeader, C, f, Ph, screenPad } from '../ui';
@@ -101,7 +101,7 @@ export function Store() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 10px' }}>
           {items.map(r => (
             <div key={r.id} onClick={() => open(r.id)} style={{ cursor: 'pointer', background: '#fff', borderRadius: 16, overflow: 'hidden' }}>
-              <Ph src={PRODUCT_IMAGES[r.id]} alt={r.title} style={{ aspectRatio: '1' }} />
+              <Ph src={r.image} alt={r.title} style={{ aspectRatio: '1' }} />
               <div style={{ padding: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ font: f(500, 12, 1.3) }}>{r.title}</div>
                 <b style={{ font: f(800, 14), color: C.accent, whiteSpace: 'nowrap' }}>{r.priceText}</b>

@@ -1,4 +1,3 @@
-import { PRODUCT_IMAGES } from '../data/images';
 import { productById, tiersOf, useStore } from '../store';
 import { C, f, mono, Ph } from '../ui';
 
@@ -17,7 +16,7 @@ export function Product() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: 20 }}>
-      <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} step={10} fontSize={11} style={{ position: 'relative', height: 360 }}>
+      <Ph src={p.image} alt={p.title} step={10} fontSize={11} style={{ position: 'relative', height: 360 }}>
         <button onClick={back} aria-label="Back" style={{ position: 'absolute', top: 10, insetInlineStart: 14, width: 40, height: 40, borderRadius: '50%', border: 'none', background: '#fff', font: f(700, 18) }}>{t('back')}</button>
         <button onClick={() => say('t_link')} style={{ position: 'absolute', top: 10, insetInlineEnd: 14, height: 40, padding: '0 14px', borderRadius: 999, border: 'none', background: '#fff', font: f(600, 13) }}>{t('share')}</button>
         <div style={{ position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 5 }}>
@@ -30,7 +29,7 @@ export function Product() {
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
           <span style={{ font: f(900, 30), color: C.accent, letterSpacing: -1, whiteSpace: 'nowrap' }}>{priceText}</span>
           <span style={{ font: f(400, 14), color: C.faint, textDecoration: 'line-through', whiteSpace: 'nowrap' }}>{p.wasText}</span>
-          <span style={{ background: C.accent, color: '#fff', font: f(800, 12), padding: '3px 7px', borderRadius: 6, whiteSpace: 'nowrap' }}>{p.offText}</span>
+          {p.offText && <span style={{ background: C.accent, color: '#fff', font: f(800, 12), padding: '3px 7px', borderRadius: 6, whiteSpace: 'nowrap' }}>{p.offText}</span>}
         </div>
         <div style={{ font: f(600, 18, 1.3), textWrap: 'pretty' }}>{p.title}</div>
         <div style={{ font: f(500, 13), color: C.muted }}>★ {p.rating} · {p.reviews} {t('reviewsL')} · {p.sold} {t('sold')}</div>
@@ -114,7 +113,7 @@ export function Product() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {related.map(r => (
             <div key={r.id} onClick={() => open(r.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <Ph src={PRODUCT_IMAGES[r.id]} alt={r.title} style={{ aspectRatio: '1', borderRadius: 14 }} />
+              <Ph src={r.image} alt={r.title} style={{ aspectRatio: '1', borderRadius: 14 }} />
               <div style={{ font: f(500, 12, 1.3) }}>{r.title}</div>
               <b style={{ font: f(800, 14), color: C.accent, whiteSpace: 'nowrap' }}>{r.priceText}</b>
             </div>
@@ -137,7 +136,7 @@ export function ProductBar() {
       <button onClick={() => toggleWish(s.pid)} aria-label={t('wishlist')} aria-pressed={p.wished} style={{ ...sq, font: f(600, 20), color: p.wished ? C.accent : C.ink }}>{p.wished ? '♥' : '♡'}</button>
       <button onClick={() => go('cart')} style={{ ...sq, position: 'relative', font: f(700, 12) }}>
         {t('cart')}
-        <span style={{ position: 'absolute', top: -6, right: -6, minWidth: 18, height: 18, borderRadius: 9, background: C.accent, color: '#fff', font: f(700, 10, '18px') }}>{cartCount}</span>
+        {cartCount > 0 && <span style={{ position: 'absolute', top: -6, right: -6, minWidth: 18, height: 18, borderRadius: 9, background: C.accent, color: '#fff', font: f(700, 10, '18px') }}>{cartCount}</span>}
       </button>
       <button onClick={() => { addCurrent(); say('t_added'); }} style={{ flex: 1, height: 48, borderRadius: 14, border: `2px solid ${C.ink}`, background: '#fff', font: f(800, 14) }}>{t('addToCart')}</button>
       <button onClick={() => { addCurrent(); go('checkout', { placed: false }); }} style={{ flex: 1, height: 48, borderRadius: 14, border: 'none', background: C.accent, color: '#fff', font: f(800, 14) }}>{t('buyNow')}</button>

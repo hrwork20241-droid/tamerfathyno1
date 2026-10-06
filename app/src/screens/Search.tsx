@@ -1,4 +1,3 @@
-import { PRODUCT_IMAGES } from '../data/images';
 import { useStore, type SortKey } from '../store';
 import { BackButton, C, chip, f, mono, Ph } from '../ui';
 
@@ -9,7 +8,11 @@ const TRENDING: [id: number, label: string, query: string][] = [
 const SORTS: SortKey[] = ['bestMatch', 'priceUp', 'priceDown', 'topRated'];
 
 export function Search() {
-  const { s, t, word, productName, cards, open, set } = useStore();
+  const { s, t, word, cards, byId, usingSamples, open, set } = useStore();
+  // [key, label, query]: the design's list for the samples, else the best-selling live products.
+  const trending: [number, string, string][] = usingSamples
+    ? TRENDING.map(([id, label, query]) => [id, s.lang === 'en' ? label : byId(id).title, query])
+    : [...cards].sort((a, b) => b.pct - a.pct).slice(0, 5).map(c => [c.id, c.title, c.title]);
   const q = s.query.trim().toLowerCase();
 
   let results = cards.filter(c =>
@@ -42,14 +45,14 @@ export function Search() {
           </div>
           <div style={{ font: f(800, 14), marginTop: 8 }}>{t('trending')}</div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {TRENDING.map(([id, label, query], i) => (
+            {trending.map(([id, label, query], i) => (
               <button
                 key={id}
                 onClick={() => set({ query })}
                 style={{ border: 'none', borderBottom: `1px solid ${C.line}`, background: 'none', height: 46, display: 'flex', alignItems: 'center', gap: 12, textAlign: 'start', font: f(500, 14), color: C.ink, padding: 0 }}
               >
                 <span style={{ font: mono(700, 12), color: C.accent, width: 18 }}>{i + 1}</span>
-                {s.lang === 'en' ? label : productName(id)}
+                {label}
               </button>
             ))}
           </div>
@@ -74,7 +77,7 @@ export function Search() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 10px' }}>
             {results.map(p => (
               <div key={p.id} onClick={() => open(p.id)} style={{ background: '#fff', borderRadius: 16, overflow: 'hidden', cursor: 'pointer' }}>
-                <Ph src={PRODUCT_IMAGES[p.id]} alt={p.title} style={{ aspectRatio: '1' }} />
+                <Ph src={p.image} alt={p.title} style={{ aspectRatio: '1' }} />
                 <div style={{ padding: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <div style={{ font: f(500, 13, 1.3) }}>{p.title}</div>
                   <b style={{ font: f(800, 16), color: C.accent, whiteSpace: 'nowrap' }}>{p.priceText}</b>

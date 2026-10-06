@@ -62,6 +62,7 @@ function SidePanel() {
           ))}
         </div>
       </div>
+      <a href="#admin" style={{ font: f(700, 13), color: C.accent }}>Control panel (لوحة التحكم) →</a>
     </div>
   );
 }

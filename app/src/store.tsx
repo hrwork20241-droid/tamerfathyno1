@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { P, type Category, type Product } from './data/products';
 import { formatPrice, unitPrice, type Mode, type ShipKey } from './pricing';
+import { backendConfigured, fetchVisibleProducts, readCachedCatalog, writeCachedCatalog } from './backend';
+import { PRODUCT_IMAGES } from './data/images';
 import { CURRENCY_CODES, LANG_CODES, STRINGS, PRODUCT_NAMES, RTL, WORDS, type Lang, type TKey } from './data/locale';
 
 export type Screen =
@@ -64,6 +66,8 @@ export interface State {
   msgs: Msg[];
   addresses: Address[];
   addrId: number;
+  /** The catalogue: products from the online database, or the built-in samples. */
+  products: Product[];
 }
 
 /** A product prepared for display in the current language, currency and mode. */
@@ -77,6 +81,20 @@ export interface CardView extends Product {
   metaText: string;
   wished: boolean;
   sellerInitial: string;
+  /** Photo URL, if the product has one. */
+  image?: string;
+}
+
+/**
+ * Current catalogue, kept outside React too so plain helpers (productById, saved-data
+ * validation) can see it. Starts from the last database load, else the samples.
+ */
+let catalog: Product[] = readCachedCatalog() ?? P;
+
+/** Drop cart lines and wishlist entries for products that no longer exist. */
+function pruneToCatalog<T extends { cart: CartLine[]; wish: number[] }>(s: T, products: Product[]) {
+  const has = (id: number, color?: string) => products.some(p => p.id === id && (color === undefined || p.colors.includes(color)));
+  return { cart: s.cart.filter(c => has(c.id, c.color)), wish: s.wish.filter(id => has(id)) };
 }
 
 const STORAGE_KEY = 'no1:v1';
@@ -93,7 +111,7 @@ function loadSaved(): Partial<Saved> {
 
 /** Validate saved data field by field, keeping only what still matches the catalogue. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- untrusted JSON, checked field by field
-export function parseSaved(raw: any): Partial<Saved> {
+export function parseSaved(raw: any, products: Product[] = catalog): Partial<Saved> {
   if (!raw || typeof raw !== 'object') return {};
   const out: Partial<Saved> = {};
   if (LANG_CODES.includes(raw.lang)) out.lang = raw.lang;
@@ -101,9 +119,9 @@ export function parseSaved(raw: any): Partial<Saved> {
   if (raw.mode === 'retail' || raw.mode === 'wholesale') out.mode = raw.mode;
   if (Array.isArray(raw.cart)) {
     out.cart = raw.cart.filter((c: CartLine) =>
-      P.some(p => p.id === c?.id && p.colors.includes(c.color)) && Number.isInteger(c.qty) && c.qty > 0);
+      products.some(p => p.id === c?.id && p.colors.includes(c.color)) && Number.isInteger(c.qty) && c.qty > 0);
   }
-  if (Array.isArray(raw.wish)) out.wish = [...new Set<number>(raw.wish)].filter(id => P.some(p => p.id === id));
+  if (Array.isArray(raw.wish)) out.wish = [...new Set<number>(raw.wish)].filter(id => products.some(p => p.id === id));
   if (typeof raw.follow === 'boolean') out.follow = raw.follow;
   if (typeof raw.coupon === 'boolean') out.coupon = raw.coupon;
   if (PAY_KEYS.includes(raw.pay)) out.pay = raw.pay;
@@ -138,20 +156,25 @@ function initialState(): State {
   const cur = CURRENCY_CODES.find(c => c === q.get('currency')?.toUpperCase()) ?? saved.cur ?? 'KWD';
   const qm = q.get('mode');
   const mode: Mode = qm === 'wholesale' || qm === 'retail' ? qm : saved.mode ?? 'retail';
+  const seeded = pruneToCatalog({
+    cart: saved.cart ?? [{ id: 1, qty: 1, color: 'Black' }, { id: 5, qty: 2, color: '30ml' }],
+    wish: saved.wish ?? [3, 7, 4],
+  }, catalog);
   return {
-    screen: 'home', stack: [], pid: 1, mode, lang, cur,
-    cart: saved.cart ?? [{ id: 1, qty: 1, color: 'Black' }, { id: 5, qty: 2, color: '30ml' }], wish: saved.wish ?? [3, 7, 4],
+    screen: 'home', stack: [], pid: catalog[0]?.id ?? 1, mode, lang, cur,
+    cart: seeded.cart, wish: seeded.wish,
     cat: 'All', railCat: 'Electronics', query: '', sort: 'bestMatch', colorIdx: 0, qty: mode === 'wholesale' ? 10 : 1, slot: 0,
     ship: 'standard', pay: saved.pay ?? 'knet', placed: false, coupon: saved.coupon ?? false, toast: '',
     rfq: { item: '', qty: '', price: '' }, rfqErr: '', follow: saved.follow ?? false, draft: '',
     msgs: [{ me: false, k: 'm_hello' }],
     addresses: saved.addresses ?? SEED_ADDRESSES, addrId: saved.addrId ?? 1,
+    products: catalog,
   };
 }
 
 export { tiersOf } from './pricing';
 
-export const productById = (id: number) => P.find(x => x.id === id)!;
+export const productById = (id: number) => catalog.find(x => x.id === id)!;
 
 function useStoreValue() {
   const [s, setS] = useState<State>(initialState);
@@ -163,6 +186,24 @@ function useStoreValue() {
   }, []);
 
   useEffect(() => () => clearTimeout(toastTimer.current), []);
+  // Load the live catalogue. An empty database keeps the samples, so the app is never blank.
+  useEffect(() => {
+    if (!backendConfigured) return;
+    fetchVisibleProducts().then(list => {
+      if (list.length) writeCachedCatalog(list);
+      const products = list.length ? list : P;
+      catalog = products;
+      set(prev => {
+        const pidOk = products.some(p => p.id === prev.pid);
+        const lost = !pidOk && ['product', 'chat', 'store'].includes(prev.screen);
+        return {
+          products, ...pruneToCatalog(prev, products),
+          ...(pidOk ? null : { pid: products[0]?.id ?? 1 }),
+          ...(lost ? { screen: 'home' as Screen, stack: [] } : null),
+        };
+      });
+    }).catch(() => { /* offline or misconfigured: keep the cached or sample catalogue */ });
+  }, [set]);
   useEffect(() => {
     document.documentElement.lang = s.lang;
   }, [s.lang]);
@@ -198,7 +239,10 @@ function useStoreValue() {
   const t = (k: TKey): string => STRINGS[s.lang][k] ?? STRINGS.en[k] ?? k;
   /** Localise a category, subcategory or variant word. */
   const word = (x: string) => WORDS[s.lang][x] ?? x;
-  const productName = (id: number) => PRODUCT_NAMES[s.lang][id] ?? productById(id).name;
+  /** Product name in the current language: samples have all 8, database products Arabic and English. */
+  const productName = (p: Product) => (p.fromDb
+    ? (s.lang === 'ar' ? p.ar : p.name)
+    : PRODUCT_NAMES[s.lang][p.id] ?? p.name);
   const fmt = (kwd: number) => formatPrice(kwd, s.cur, s.lang);
   /** Unit price: retail price, or the wholesale tier the quantity falls in. */
   const unit = (p: Product, qty = 10) => unitPrice(p, qty, s.mode);
@@ -207,10 +251,12 @@ function useStoreValue() {
     const wished = s.wish.includes(p.id);
     return {
       ...p,
-      title: productName(p.id),
+      title: productName(p),
+      image: p.image ?? (p.fromDb ? undefined : PRODUCT_IMAGES[p.id]),
       priceText: fmt(unit(p, 10)) + (w ? t('perPc') : ''),
-      wasText: fmt(w ? p.price : p.was),
-      offText: '-' + Math.round((1 - p.price / p.was) * 100) + '%',
+      // No strike-through price or discount badge when there is no real discount.
+      wasText: w || p.was > p.price ? fmt(w ? p.price : p.was) : '',
+      offText: p.was > p.price ? '-' + Math.round((1 - p.price / p.was) * 100) + '%' : '',
       soldPct: p.pct + '%',
       soldText: p.pct + '% ' + t('claimed'),
       metaText: w ? t('moq') + ' · ' + p.sold + ' ' + t('sold') : p.sold + ' ' + t('sold'),
@@ -218,7 +264,7 @@ function useStoreValue() {
       sellerInitial: p.seller[0],
     };
   };
-  const cards = P.map(card);
+  const cards = s.products.map(card);
 
   const open = (id: number) => go('product', { pid: id, colorIdx: 0, qty: w ? 10 : 1 });
 
@@ -262,7 +308,7 @@ function useStoreValue() {
   return {
     s, set, scrollRef: scrollRef as RefObject<HTMLDivElement>,
     isWholesale: w, dir: RTL.includes(s.lang) ? 'rtl' as const : 'ltr' as const,
-    t, word, productName, fmt, unit, card, cards, byId: (id: number) => cards.find(c => c.id === id)!,
+    t, word, productName, fmt, unit, card, cards, byId: (id: number) => cards.find(c => c.id === id)!, usingSamples: !s.products.some(p => p.fromDb),
     go, tab, back, jump, say, open, toggleWish, add, quickAdd, setMode, sendMsg,
     cartCount, toastText, addrText, address,
   };
