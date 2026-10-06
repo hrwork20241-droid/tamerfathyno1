@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { useStore, type Mode } from './store';
 
 export const FONT = "Archivo,'IBM Plex Sans Arabic'";
@@ -31,8 +31,8 @@ const STRIPES = {
 };
 
 /**
- * Image box. With `src` it shows that image (cropped to fill); without one it
- * falls back to the design's diagonal-stripe placeholder and `label`.
+ * Image box. With `src` it shows that image (cropped to fill); without one, or
+ * if the image fails to load, it shows the design's diagonal-stripe placeholder and `label`.
  */
 export function Ph({ src, alt = '', label, step = 8, tone = 'light', fontSize = 10, style, children, onClick }: {
   src?: string;
@@ -46,6 +46,8 @@ export function Ph({ src, alt = '', label, step = 8, tone = 'light', fontSize = 
   onClick?: () => void;
 }) {
   const [a, b] = STRIPES[tone];
+  const [failed, setFailed] = useState<string>();
+  if (src && failed === src) src = undefined;
   return (
     <div
       onClick={onClick}
@@ -59,7 +61,7 @@ export function Ph({ src, alt = '', label, step = 8, tone = 'light', fontSize = 
       }}
     >
       {src
-        ? <img src={src} alt={alt} loading="lazy" draggable={false} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        ? <img src={src} alt={alt} loading="lazy" draggable={false} onError={() => setFailed(src)} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
         : label}
       {children}
     </div>

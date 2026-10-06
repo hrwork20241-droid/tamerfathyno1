@@ -84,6 +84,9 @@ export function Wishlist() {
   );
 }
 
+/** First letter of each of the first two words, e.g. "Tamer Fathy" → "TF". */
+const initials = (name: string) => name.split(/\s+/).slice(0, 2).map(w => Array.from(w)[0] ?? '').join('');
+
 export function Account() {
   const { s, t, go, say, address } = useStore();
   const lang = LANGS.find(x => x[0] === s.lang) ?? LANGS[0];
@@ -100,7 +103,7 @@ export function Account() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: '0 16px 24px' }}>
       <div style={{ background: C.ink, color: '#fff', borderRadius: 22, padding: 18, display: 'flex', flexDirection: 'column', gap: 16, marginTop: 6 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Ph src={AVATAR_IMAGE} alt={t('name')} style={{ width: 56, height: 56, flex: 'none', borderRadius: '50%', border: `2px solid ${C.accent}`, boxSizing: 'border-box' }} />
+          <Ph src={AVATAR_IMAGE} alt={t('name')} label={initials(t('name'))} style={{ background: C.accent, color: '#fff', font: f(900, 20),  width: 56, height: 56, flex: 'none', borderRadius: '50%', border: `2px solid ${C.accent}`, boxSizing: 'border-box' }} />
           <div style={{ flex: 1 }}>
             <div style={{ font: f(800, 18) }}>{t('name')}</div>
             <div style={{ font: f(600, 12), color: C.sale }}>{t('gold')}</div>
