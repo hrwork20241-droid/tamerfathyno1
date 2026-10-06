@@ -16,6 +16,12 @@ Below 480px wide it fills the viewport like a native app.
 Once hosted over HTTPS it can be installed to a phone's home screen ("Add to Home Screen" / "Install app") with the NO1 icon, and it opens full screen.
 The manifest is `public/manifest.webmanifest`; icons are in `public/icons/` (`icon.svg` is the source for the PNGs).
 
+## Hosting (GitHub Pages)
+
+Every push to the `no1-app` branch runs `.github/workflows/deploy-pages.yml`: it runs the tests, builds the app and publishes `app/dist` to the `gh-pages` branch.
+To serve it, turn Pages on once: **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `gh-pages`, folder `/ (root)` → Save**.
+The site is then at https://hrwork20241-droid.github.io/tamerfathyno1/ and can be installed from a phone's browser.
+
 ## Options
 
 The cart, wishlist, followed store, coupon, saved addresses, default payment method, language, currency and mode are saved in `localStorage` (`no1:v1`), so they survive a reload.
