@@ -2,8 +2,7 @@ import { PRODUCT_IMAGES } from '../data/images';
 import type { TKey } from '../data/locale';
 import { productById, useStore, type PayKey, type ShipKey } from '../store';
 import { BackHeader, C, f, mono, Ph, screenPad } from '../ui';
-
-const EXPRESS_FEE = 1.5; // KWD
+import { cartTotals, EXPRESS_FEE } from '../pricing';
 
 export const PAY_DEFS: [PayKey, TKey, TKey | null][] = [
   ['knet', 'knet', 'debit'], ['card', 'card', null], ['apple', 'applePay', 'faceId'], ['cash', 'cash', 'onDelivery'],
@@ -22,17 +21,16 @@ function useCart() {
     };
   });
   const sub = lines.reduce((a, c) => a + c.sub, 0);
-  const disc = s.coupon ? Math.min(2, sub * 0.1) : 0;
-  const ship = s.ship === 'express' ? EXPRESS_FEE : 0;
+  const { discount: disc, shipping: ship, total, grand } = cartTotals(sub, s.coupon, s.ship);
   return {
     lines,
     countText: cartCount + ' ' + (cartCount === 1 ? t('item') : t('items')),
     sum: {
       sub: fmt(sub),
       disc: disc ? '−' + fmt(disc) : fmt(0),
-      total: fmt(sub - disc),
+      total: fmt(total),
       ship: ship ? fmt(ship) : t('free'),
-      grand: fmt(sub - disc + ship),
+      grand: fmt(grand),
     },
   };
 }

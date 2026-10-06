@@ -7,6 +7,7 @@ It is a marketplace with a retail / wholesale switch.
 npm install
 npm run dev      # http://localhost:5173
 npm run build    # typecheck + production bundle in dist/
+npm test         # unit tests: prices, tiers, currency, cart totals, saved data, translations
 ```
 
 On desktop the app renders inside the phone frame, next to the "Jump to" showcase panel.
@@ -26,7 +27,8 @@ You can set the starting language, currency and mode with URL parameters. These 
 
 ## Layout
 
-- `src/store.tsx`: app state, navigation stack, price, currency and tier logic, and the toast
+- `src/store.tsx`: app state, navigation stack, saved-data validation and the toast
+- `src/pricing.ts`: wholesale tiers, unit prices, currency formatting and cart totals (pure, unit-tested)
 - `src/data/`: products, categories, languages, currencies and UI strings (`lang/` has one pack per extra language)
 - `src/ui.tsx`: design tokens and shared pieces (image placeholder, back header, mode switch)
 - `src/screens/`: one component per screen (18 in total, including Addresses, Payment methods and Help center from the account menu)

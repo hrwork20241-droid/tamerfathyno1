@@ -1,15 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { P, type Category, type Product } from './data/products';
-import { CUR, CURRENCY_CODES, LANG_CODES, STRINGS, PRODUCT_NAMES, RTL, WORDS, type Lang, type TKey } from './data/locale';
+import { formatPrice, unitPrice, type Mode, type ShipKey } from './pricing';
+import { CURRENCY_CODES, LANG_CODES, STRINGS, PRODUCT_NAMES, RTL, WORDS, type Lang, type TKey } from './data/locale';
 
 export type Screen =
   | 'home' | 'cats' | 'deals' | 'search' | 'product' | 'cart' | 'checkout' | 'orders'
   | 'wish' | 'account' | 'rfq' | 'chat' | 'store' | 'notifs' | 'locale'
   | 'addresses' | 'payments' | 'help';
-export type Mode = 'retail' | 'wholesale';
+export type { Mode, ShipKey } from './pricing';
 export type SortKey = 'bestMatch' | 'priceUp' | 'priceDown' | 'topRated';
 export type PayKey = 'knet' | 'card' | 'apple' | 'cash';
-export type ShipKey = 'standard' | 'express';
 
 export const TAB_SCREENS: Screen[] = ['home', 'cats', 'deals', 'cart', 'account'];
 
@@ -85,32 +85,38 @@ type Saved = Pick<State, 'lang' | 'cur' | 'mode' | 'cart' | 'wish' | 'follow' | 
 /** Shopper data kept across reloads. Anything invalid or unreadable is ignored. */
 function loadSaved(): Partial<Saved> {
   try {
-    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}');
-    const out: Partial<Saved> = {};
-    if (LANG_CODES.includes(raw.lang)) out.lang = raw.lang;
-    if (CURRENCY_CODES.includes(raw.cur)) out.cur = raw.cur;
-    if (raw.mode === 'retail' || raw.mode === 'wholesale') out.mode = raw.mode;
-    if (Array.isArray(raw.cart)) {
-      out.cart = raw.cart.filter((c: CartLine) =>
-        P.some(p => p.id === c?.id && p.colors.includes(c.color)) && Number.isInteger(c.qty) && c.qty > 0);
-    }
-    if (Array.isArray(raw.wish)) out.wish = [...new Set<number>(raw.wish)].filter(id => P.some(p => p.id === id));
-    if (typeof raw.follow === 'boolean') out.follow = raw.follow;
-    if (typeof raw.coupon === 'boolean') out.coupon = raw.coupon;
-    if (PAY_KEYS.includes(raw.pay)) out.pay = raw.pay;
-    if (Array.isArray(raw.addresses)) {
-      const list = raw.addresses.filter((a: Address) =>
-        Number.isInteger(a?.id) && (a.label === 'addrHome' || a.label === 'addrWork')
-        && ['area', 'block', 'street', 'house', 'phone'].every(k => typeof a[k as keyof Address] === 'string'));
-      if (list.length) {
-        out.addresses = list;
-        out.addrId = list.some((a: Address) => a.id === raw.addrId) ? raw.addrId : list[0].id;
-      }
-    }
-    return out;
+    return parseSaved(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}'));
   } catch {
     return {};
   }
+}
+
+/** Validate saved data field by field, keeping only what still matches the catalogue. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- untrusted JSON, checked field by field
+export function parseSaved(raw: any): Partial<Saved> {
+  if (!raw || typeof raw !== 'object') return {};
+  const out: Partial<Saved> = {};
+  if (LANG_CODES.includes(raw.lang)) out.lang = raw.lang;
+  if (CURRENCY_CODES.includes(raw.cur)) out.cur = raw.cur;
+  if (raw.mode === 'retail' || raw.mode === 'wholesale') out.mode = raw.mode;
+  if (Array.isArray(raw.cart)) {
+    out.cart = raw.cart.filter((c: CartLine) =>
+      P.some(p => p.id === c?.id && p.colors.includes(c.color)) && Number.isInteger(c.qty) && c.qty > 0);
+  }
+  if (Array.isArray(raw.wish)) out.wish = [...new Set<number>(raw.wish)].filter(id => P.some(p => p.id === id));
+  if (typeof raw.follow === 'boolean') out.follow = raw.follow;
+  if (typeof raw.coupon === 'boolean') out.coupon = raw.coupon;
+  if (PAY_KEYS.includes(raw.pay)) out.pay = raw.pay;
+  if (Array.isArray(raw.addresses)) {
+    const list = raw.addresses.filter((a: Address) =>
+      Number.isInteger(a?.id) && (a.label === 'addrHome' || a.label === 'addrWork')
+      && ['area', 'block', 'street', 'house', 'phone'].every(k => typeof a[k as keyof Address] === 'string'));
+    if (list.length) {
+      out.addresses = list;
+      out.addrId = list.some((a: Address) => a.id === raw.addrId) ? raw.addrId : list[0].id;
+    }
+  }
+  return out;
 }
 
 function save(s: State) {
@@ -143,11 +149,7 @@ function initialState(): State {
   };
 }
 
-export const tiersOf = (p: Product) => [
-  { min: 10, max: 49 as number | null, price: p.price * 0.72 },
-  { min: 50, max: 199 as number | null, price: p.price * 0.64 },
-  { min: 200, max: null as number | null, price: p.price * 0.55 },
-];
+export { tiersOf } from './pricing';
 
 export const productById = (id: number) => P.find(x => x.id === id)!;
 
@@ -197,20 +199,9 @@ function useStoreValue() {
   /** Localise a category, subcategory or variant word. */
   const word = (x: string) => WORDS[s.lang][x] ?? x;
   const productName = (id: number) => PRODUCT_NAMES[s.lang][id] ?? productById(id).name;
-  const fmt = (kwd: number) => {
-    const c = CUR.find(x => x[0] === s.cur) ?? CUR[0];
-    const n = (kwd * c[3]).toLocaleString('en-US', { minimumFractionDigits: c[4], maximumFractionDigits: c[4] });
-    if (s.lang === 'ar') return n + ' ' + c[2];
-    return c[1].length > 1 && c[1] !== 'E£' ? c[1] + ' ' + n : c[1] + n;
-  };
+  const fmt = (kwd: number) => formatPrice(kwd, s.cur, s.lang);
   /** Unit price: retail price, or the wholesale tier the quantity falls in. */
-  const unit = (p: Product, qty = 10) => {
-    if (!w) return p.price;
-    const tiers = tiersOf(p);
-    let u = tiers[0].price;
-    tiers.forEach(x => { if (qty >= x.min) u = x.price; });
-    return u;
-  };
+  const unit = (p: Product, qty = 10) => unitPrice(p, qty, s.mode);
 
   const card = (p: Product): CardView => {
     const wished = s.wish.includes(p.id);
